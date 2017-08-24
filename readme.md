@@ -144,7 +144,9 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 | :--------           |:--------  |
 | iooutId             | 输出口ID | 
 
-## 4.DEMO
+## 4. DEMO
 
-DEMO 使用芯片为 STM32F103RCT6，通过延时方式测试参数是否设置成功。
-DEMO 路径: [./demo](https://github.com/redocCheng/IOOUT/tree/master/demo)
+[DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 使用芯片为 STM32F103RCT6，通过延时方式测试参数是否设置成功。
+
+## 5. 其它
+If you have any question,Please connact redoc/619675912@qq.com
