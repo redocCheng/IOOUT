@@ -70,11 +70,11 @@ void ioout_Config(void)
 ## 3. API
 API接口在 [/ioout/ioout.h](/ioout/ioout.h) 声明，下方内容可以使用 CTRL+F 搜索。
 
-3.1 核心结构体配置
+### 3.1 核心结构体配置
 初始化的 IOOUT 的核心结构体，初始化后才可以使用下面的API。
 > void ioout_Config(void)
 
-3.2 端口函数初始化
+### 3.2 端口函数初始化
 查找空闲端口，并初始化该端口，初始化成返回 *IOOUT_NO_ERR* ，其中，IO口接口函数需要遵循 *void function(uint8_t)* 格式。
 >iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
 
@@ -92,7 +92,7 @@ if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED0,GPIO_SetLed0))
 }
 ```
 
-3.3 时间参数设置
+### 3.3 时间参数设置
 设置端口时间并启动，时间参数以 ms 为单位，参数必须是查询 ioout_Time_Interval  时间的整数倍，workTime 为 0 停止，ctlTime 为 0 一直保持周期，设置成功返回 IOOUT_NO_ERR 。
 
 >iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint32_t interval,uint32_t workTime,uint32_t ctlTime)
@@ -112,7 +112,7 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 ```
 >注：ioout_Time_Interval  = 10
 
-3.4 启动
+### 3.4 启动
 启动端口调用，启动成功返回 IOOUT_NO_ERR 。
 >iooutErrCode_Typedef ioout_Start(iooutId_Typedef iooutId)
 
@@ -120,7 +120,7 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 | :--------           |:--------  |
 | iooutId             | 输出口ID | 
 
-3.5 暂停
+### 3.5 暂停
 暂停端口调用，暂停端口 **不清除端口时间数据** ，暂停返回 IOOUT_NO_ERR 。
 >iooutErrCode_Typedef ioout_Pause(iooutId_Typedef iooutId)
 
@@ -128,7 +128,7 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 | :--------           |:--------  |
 | iooutId             | 输出口ID | 
 
-3.6 停止
+### 3.6 停止
 停止端口调用，暂停端口将 **清除端口时间数据** ，暂停返回 IOOUT_NO_ERR 。
 >iooutErrCode_Typedef ioout_Stop(iooutId_Typedef iooutId)
 
@@ -136,7 +136,7 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 | :--------           |:--------  |
 | iooutId             | 输出口ID | 
 
-3.7 删除
+### 3.7 删除
 将端口从结构体中删除，如果未再次初始化，将无法正常调用，删除成功返回 IOOUT_NO_ERR 。
 >iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
 
