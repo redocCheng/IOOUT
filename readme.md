@@ -68,7 +68,7 @@ void ioout_Config(void)
 
 
 ## 3. API
-API接口在 [/ioout/ioout.h](/ioout/ioout.h) 声明，下方内容可以使用 CTRL+F 搜索。
+API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/ioout/ioout.h) 声明，下方内容可以使用 CTRL+F 搜索。
 
 ### 3.1 核心结构体配置
 初始化的 IOOUT 的核心结构体，初始化后才可以使用下面的API。
@@ -146,3 +146,5 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 
 ## 4.DEMO
 
+DEMO 使用芯片为 STM32F103RCT6，通过延时方式测试参数是否设置成功。
+DEMO 路径: [./demo](https://github.com/redocCheng/IOOUT/tree/master/demo)
