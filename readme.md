@@ -4,6 +4,18 @@
 ## 1.介绍
 [IOOUT](https://github.com/redocCheng/IOOUT)  是一个 GPIO 输出口控制扩展模块，提供 **启动** 、 **暂停** 、**设置** 和 **停止** 接口，可以根据你所需的周期、占空比和总时间，更加便捷地管理多个IO口时序。
 
+## 1.1 文件结构
+
+| 源文件               |描述|
+| :--------           |:--------  |
+| \ioout              | IOOUT操作接口和实现源码 | 
+| \demo               | stm32f10x平台基于HAL库的demo | 
+
+## 1.2 资源占用
+
+**单片机资源**： 定时器一个
+**ROM**: 1Kb
+**RAM**: 视IO口多少
 
 ## 2. 移植
 
@@ -146,7 +158,7 @@ ioout_Set(ID_IOOUT_LED1,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 
 ## 4. DEMO
 
-[DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 使用芯片为 STM32F103RCT6，通过延时方式测试参数是否设置成功。
+[DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 使用芯片为 STM32F103RCT6，使用 HAL 库，通过延时方式测试参数是否设置成功。
 
 ## 5. 其它
 If you have any question,Please connact redoc/619675912@qq.com
