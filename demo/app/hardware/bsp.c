@@ -25,16 +25,16 @@
 /* functions ---------------------------------------------------------*/
 
 /**
-  * @brief	硬件初始化
-  * @param	void
+  * @brief  硬件库初始化
+  * @param  void
   *
-  * @return	void
+  * @return void
   * @remark
   */
 void BSP_Init(void)
 {
     MX_TIM3_Init();
-	MX_GPIO_Init();
+    MX_GPIO_Init();
 }
 
 

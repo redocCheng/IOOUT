@@ -55,19 +55,19 @@ void ioout_Config(void)
 {
     ioout_ListInit();
 
-	/*--------------- 移植配置Start */
+    /*--------------- 移植配置Start */
 
     if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED0,GPIO_SetLed0))
     {
-		//do something
+    	//do something
     }
 
-	if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED1,GPIO_SetLed1))
+    if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED1,GPIO_SetLed1))
     {
-		//do something
+        //do something
     }
 
-	/*--------------- 移植配置End */
+    /*--------------- 移植配置End */
 }
 
 /**
@@ -83,16 +83,16 @@ static void ioout_ListInit(void)
 
     for(i = 0; i < IOOUT_MAX; i++)
     {
-        m_nIoOutList[i].interval     	= 0;
+        m_nIoOutList[i].interval        = 0;
         m_nIoOutList[i].workTime        = 0;
-        m_nIoOutList[i].ctlTime      	= 0;
+        m_nIoOutList[i].ctlTime         = 0;
         m_nIoOutList[i].curCount        = 0;
-        m_nIoOutList[i].sumCount 		= 0;
-        m_nIoOutList[i].handle      	= NULL;
-        m_nIoOutList[i].enable     		= false;
+        m_nIoOutList[i].sumCount        = 0;
+        m_nIoOutList[i].handle          = NULL;
+        m_nIoOutList[i].enable          = false;
         m_nIoOutList[i].valid_enable    = false;
-        m_nIoOutList[i].ioCtl         	= false;
-        m_nIoOutList[i].index        	= 0xFFFF;
+        m_nIoOutList[i].ioCtl           = false;
+        m_nIoOutList[i].index           = 0xFFFF;
         iooutIdBuf[i]                   = 0xFFFF;
     }
 
@@ -426,14 +426,14 @@ iooutErrCode_Typedef ioout_Pause(iooutId_Typedef iooutId)
   */
 iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
 {
-	uint16_t id;
+    int16_t id;
 
     if(iooutId > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
-	id = iooutId;
+    id = iooutId;
 
     return ioout_KillIO((uint16_t *)(iooutIdBuf + id));
 }
@@ -448,94 +448,94 @@ iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
   */
 void ioout_CallBackProcRoutine(void)
 {
-	const uint16_t xfer_count = ioout_Time_Interval;
-	uint8_t i;
+    const uint16_t xfer_count = ioout_Time_Interval;
+    uint8_t i;
 
-	for(i = 0;i < IOOUT_MAX;i++)
-	{
-		/*  IO口号未使能  */
-		if(m_nIoOutList[i].valid_enable && !m_nIoOutList[i].enable)
-		{
-			m_nIoOutList[i].handle(false);
-			m_nIoOutList[i].sumCount     = 0;
-			continue;
-		}
+    for(i = 0;i < IOOUT_MAX;i++)
+    {
+        /*  IO口号未使能  */
+        if(m_nIoOutList[i].valid_enable && !m_nIoOutList[i].enable)
+        {
+            m_nIoOutList[i].handle(false);
+            m_nIoOutList[i].sumCount     = 0;
+            continue;
+        }
 
-		/*  IO口号使能  */
-		if(m_nIoOutList[i].valid_enable && m_nIoOutList[i].enable)
-		{
-			/*  无间隔   */
-			if(0 == m_nIoOutList[i].interval)
-			{
+        /*  IO口号使能  */
+        if(m_nIoOutList[i].valid_enable && m_nIoOutList[i].enable)
+        {
+            /*  无间隔   */
+            if(0 == m_nIoOutList[i].interval)
+            {
 
-				m_nIoOutList[i].handle(true);
+                m_nIoOutList[i].handle(true);
 
-				/*  计时  */
-				if(m_nIoOutList[i].ctlTime)
-				{
-					m_nIoOutList[i].sumCount += xfer_count;
+                /*  计时  */
+                if(m_nIoOutList[i].ctlTime)
+                {
+                    m_nIoOutList[i].sumCount += xfer_count;
 
-					if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
-					{
-						m_nIoOutList[i].handle(false);
-						m_nIoOutList[i].sumCount	= 0;
-						m_nIoOutList[i].ioCtl		= false;
-						m_nIoOutList[i].enable      = false;
+                    if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
+                    {
+                        m_nIoOutList[i].handle(false);
+                        m_nIoOutList[i].sumCount	= 0;
+                        m_nIoOutList[i].ioCtl		= false;
+                        m_nIoOutList[i].enable      = false;
 
-					}
-				}
-			}
-			/*  有间隔   */
-			else
-			{
-				m_nIoOutList[i].sumCount += xfer_count;
+                    }
+                }
+            }
+            /*  有间隔   */
+            else
+            {
+                m_nIoOutList[i].sumCount += xfer_count;
 
-				/*  总时间  */
-				if(m_nIoOutList[i].ctlTime)
-				{
-					if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
-					{
-						m_nIoOutList[i].handle(false);
-						m_nIoOutList[i].sumCount = 0;
-						m_nIoOutList[i].enable = false;
-						m_nIoOutList[i].ioCtl = false;
-						m_nIoOutList[i].curCount = 0;
-						continue;
-					}
-				}
-				else
-				{
-					m_nIoOutList[i].sumCount=0;
-				}
+                /*  总时间  */
+                if(m_nIoOutList[i].ctlTime)
+                {
+                    if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
+                    {
+                        m_nIoOutList[i].handle(false);
+                        m_nIoOutList[i].sumCount = 0;
+                        m_nIoOutList[i].enable = false;
+                        m_nIoOutList[i].ioCtl = false;
+                        m_nIoOutList[i].curCount = 0;
+                        continue;
+                    }
+                }
+                else
+                {
+                	m_nIoOutList[i].sumCount=0;
+                }
 
-				m_nIoOutList[i].curCount += xfer_count;
-				m_nIoOutList[i].handle(m_nIoOutList[i].ioCtl);
+                m_nIoOutList[i].curCount += xfer_count;
+                m_nIoOutList[i].handle(m_nIoOutList[i].ioCtl);
 
-				/*  持续时间  */
-				if(true == m_nIoOutList[i].ioCtl)
-				{
-					if(m_nIoOutList[i].curCount >= m_nIoOutList[i].workTime)
-					{
-						m_nIoOutList[i].handle(false);
-						m_nIoOutList[i].ioCtl = false;
-						m_nIoOutList[i].curCount = 0;
-					}
-				}
-				/*  间隔时间  */
-				else
-				{
-					if(m_nIoOutList[i].curCount >= m_nIoOutList[i].interval)
-					{
-						m_nIoOutList[i].handle(true);
-						m_nIoOutList[i].ioCtl = true;
-						m_nIoOutList[i].curCount = 0;
-					}
-				}
+                /*  持续时间  */
+                if(true == m_nIoOutList[i].ioCtl)
+                {
+                    if(m_nIoOutList[i].curCount >= m_nIoOutList[i].workTime)
+                    {
+                        m_nIoOutList[i].handle(false);
+                        m_nIoOutList[i].ioCtl = false;
+                        m_nIoOutList[i].curCount = 0;
+                    }
+                }
+                /*  间隔时间  */
+                else
+                {
+                    if(m_nIoOutList[i].curCount >= m_nIoOutList[i].interval)
+                    {
+                        m_nIoOutList[i].handle(true);
+                        m_nIoOutList[i].ioCtl = true;
+                        m_nIoOutList[i].curCount = 0;
+                    }
+                }
 
-			}
+            }
 
-		}
-	}
+        }
+    }
 }
 
 

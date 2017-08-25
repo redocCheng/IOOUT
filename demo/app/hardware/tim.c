@@ -66,7 +66,7 @@ void MX_TIM3_Init(void)
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 {
-	if(htim_base->Instance == TIM3)
+    if(htim_base->Instance == TIM3)
     {
         __HAL_RCC_TIM3_CLK_ENABLE();
 
@@ -98,13 +98,10 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-
     if(htim == &htim3)
     {
         ioout_CallBackProcRoutine();
     }
-
-
 }
 
 

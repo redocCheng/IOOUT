@@ -21,8 +21,8 @@
 /* typedef -----------------------------------------------------------*/
 /* define ------------------------------------------------------------*/
 /* macro -------------------------------------------------------------*/
-#define ENABLE_INT()	__ASM volatile("cpsie i")	/* 使能全局中断 */
-#define DISABLE_INT()	__ASM volatile("cpsid i")	/* 禁止全局中断 */
+#define ENABLE_INT()	__ASM volatile("cpsie i")           /* 使能全局中断 */
+#define DISABLE_INT()	__ASM volatile("cpsid i")           /* 禁止全局中断 */
 
 /* variables ---------------------------------------------------------*/
 const uint8_t projectTab[] = {"operation"};                  /**<  项目名称   */
@@ -53,18 +53,18 @@ int main(void)
     ENABLE_INT();
 
     ioout_Set(ID_IOOUT_LED0,1000,1000,0);
-	ioout_Set(ID_IOOUT_LED1,200,200,0);
+    ioout_Set(ID_IOOUT_LED1,200,200,0);
 
     while (1)
     {
-		ioout_Pause(ID_IOOUT_LED1);
-		HAL_Delay(1000);
-		ioout_Start(ID_IOOUT_LED1);
-		HAL_Delay(1000);
-		ioout_Stop(ID_IOOUT_LED1);
-		HAL_Delay(1000);
-		ioout_Set(ID_IOOUT_LED1,200,200,2000);
-		HAL_Delay(5000);
+        ioout_Pause(ID_IOOUT_LED1);
+        HAL_Delay(1000);
+        ioout_Start(ID_IOOUT_LED1);
+        HAL_Delay(1000);
+        ioout_Stop(ID_IOOUT_LED1);
+        HAL_Delay(1000);
+        ioout_Set(ID_IOOUT_LED1,200,200,2000);
+        HAL_Delay(5000);
 
     }
 }
