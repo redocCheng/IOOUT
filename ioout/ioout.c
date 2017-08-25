@@ -1,9 +1,9 @@
 /**
-  * @file		ioout.c
-  * @brief		IOÊä³ö¿ØÖÆ
-  * @author 	redoc
-  * @version	v1.0
-  * @date		2016-08-09
+  * @file       ioout.c
+  * @brief      IOÊä³ö¿ØÖÆ
+  * @author     redoc
+  * @version    v1.0
+  * @date       2016-08-09
   *
   * @note
   * [2016-08-09] <redoc> v1.0
@@ -56,12 +56,12 @@ void ioout_Config(void)
     ioout_ListInit();
 
 	/*--------------- ÒÆÖ²ÅäÖÃStart */
-	
+
     if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED0,GPIO_SetLed0))
     {
 		//do something
     }
-	
+
 	if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED1,GPIO_SetLed1))
     {
 		//do something
@@ -427,12 +427,12 @@ iooutErrCode_Typedef ioout_Pause(iooutId_Typedef iooutId)
 iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
 {
 	uint16_t id;
-	
+
     if(iooutId > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
-	
+
 	id = iooutId;
 
     return ioout_KillIO((uint16_t *)(iooutIdBuf + id));
