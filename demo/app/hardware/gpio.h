@@ -1,9 +1,9 @@
 /**
-  * @file		gpio.h
-  * @brief		gpio驱动头文件
-  * @author 	redoc <619675912@qq.com>
-  * @version	v1.0
-  * @date		2017-08-26
+  * @file       gpio.h
+  * @brief      gpio驱动头文件
+  * @author     redoc <619675912@qq.com>
+  * @version    v1.0
+  * @date       2017-08-26
   *
   * @note
   * [x2017-08-26] <redoc> v1.0
@@ -32,20 +32,20 @@ extern "C" {
 /* variables --------------------------------------------------------*/
 /* macro ------------------------------------------------------------*/
 /**
-  * @brief  LED0_OUT 
+  * @brief  LED0_OUT
   */
 #define LED0_OUT_PIN                       GPIO_PIN_4
 #define LED0_OUT_PORT                      GPIOC
-#define LED0_OUT_INIT                      GPIO_PIN_RESET	
-	
+#define LED0_OUT_INIT                      GPIO_PIN_RESET
+
 /**
-  * @brief  LED1_OUT 
+  * @brief  LED1_OUT
   */
 #define LED1_OUT_PIN                       GPIO_PIN_5
 #define LED1_OUT_PORT                      GPIOC
-#define LED1_OUT_INIT                      GPIO_PIN_RESET	
-	
-	
+#define LED1_OUT_INIT                      GPIO_PIN_RESET
+
+
 /* functions --------------------------------------------------------*/
 void MX_GPIO_Init(void);
 void GPIO_SetLed0(uint8_t state);

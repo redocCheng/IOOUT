@@ -44,17 +44,17 @@ int main(void)
 {
     HAL_Init();
     SystemClock_Config();
-    
+
     DISABLE_INT();
-    
+
     BSP_Init();
     ioout_Config();
-    
+
     ENABLE_INT();
-    
+
     ioout_Set(ID_IOOUT_LED0,1000,1000,0);
 	ioout_Set(ID_IOOUT_LED1,200,200,0);
-    
+
     while (1)
     {
 		ioout_Pause(ID_IOOUT_LED1);
@@ -65,7 +65,7 @@ int main(void)
 		HAL_Delay(1000);
 		ioout_Set(ID_IOOUT_LED1,200,200,2000);
 		HAL_Delay(5000);
-    
+
     }
 }
 

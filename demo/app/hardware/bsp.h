@@ -1,9 +1,9 @@
 /**
-  * @file		bsp.h
-  * @brief		硬件底层驱动库头文件
-  * @author 	redoc <619675912@qq.com>
-  * @version	v1.0
-  * @date		2017-08-07
+  * @file       bsp.h
+  * @brief      硬件底层驱动库头文件
+  * @author     redoc <619675912@qq.com>
+  * @version    v1.0
+  * @date       2017-08-07
   *
   * @note
   * [2016-08-07] <redoc> v1.0

@@ -1,9 +1,9 @@
 /**
-  * @file		tim.c
-  * @brief		硬件定时器驱动
-  * @author 	redoc <619675912@qq.com>
-  * @version	v1.0
-  * @date		2017-08-08
+  * @file       tim.c
+  * @brief      硬件定时器驱动
+  * @author     redoc <619675912@qq.com>
+  * @version    v1.0
+  * @date       2017-08-08
   *
   * @note
   * [2017-08-08] <redoc> v1.0

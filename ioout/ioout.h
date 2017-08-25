@@ -1,9 +1,9 @@
 /**
-  * @file		ioout.h
-  * @brief		IO输出控制头文件
-  * @author 	redoc
-  * @version	v1.0
-  * @date		2016-08-09
+  * @file       ioout.h
+  * @brief      IO输出控制头文件
+  * @author     redoc
+  * @version    v1.0
+  * @date       2016-08-09
   *
   * @note
   * [2016-08-09] <redoc> v1.0
@@ -35,8 +35,8 @@ extern "C" {
   */
 typedef void (*IOOUTCALLBACK)(uint8_t);
 
-/*------------ 移植配置Start */	
-	
+/*------------ 移植配置Start */
+
 /**
   * @brief IO输出控制ID
   */
@@ -56,7 +56,7 @@ typedef enum
 
 } ioOutIndexNum_Typedef;
 
-/*------------- 移植配置End */	
+/*------------- 移植配置End */
 
 
 /**

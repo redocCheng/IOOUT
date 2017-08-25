@@ -1,9 +1,9 @@
 /**
-  * @file		bsp.c
-  * @brief		Ó²¼þµ×²ãÇý¶¯¿â
-  * @author 	redoc <619675912@qq.com>
-  * @version	v1.0
-  * @date		2017-08-07
+  * @file       bsp.c
+  * @brief      Ó²¼þµ×²ãÇý¶¯¿â
+  * @author     redoc <619675912@qq.com>
+  * @version    v1.0
+  * @date       2017-08-07
   *
   * @note
   * [2016-08-07] <redoc> v1.0

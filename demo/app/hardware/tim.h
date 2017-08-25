@@ -1,9 +1,10 @@
 /**
-  * @file		tim.h
-  * @brief		硬件定时器驱动头文件
-  * @author 	redoc <619675912@qq.com>
-  * @version	v1.0
-  * @date		2017-08-10
+  * @file       tim.h
+  * @brief      硬件定时器驱动头文件
+  * @author     redoc <619675912@qq.com>
+  * @version    v1.0
+  * @date       2017-08-08
+
   *
   * @note
   * [x2017-08-10] <redoc> v1.0
