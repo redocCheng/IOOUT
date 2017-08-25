@@ -30,10 +30,10 @@ TIM_HandleTypeDef htim3;
 
 
 /**
-  * @brief	TIM3 init function
-  * @param	void
+  * @brief  TIM3 init function
+  * @param  void
   *
-  * @return	void
+  * @return void
   * @remark Èí¶¨Ê±Æ÷
   */
 void MX_TIM3_Init(void)
