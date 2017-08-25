@@ -53,10 +53,10 @@ void MX_GPIO_Init(void)
 }
 
 /**
-  * @brief	LED0ÉèÖÃ
-  * @param	state£ºÉèÖÃ×´Ì¬ true or false
+  * @brief  LED0ÉèÖÃ
+  * @param  state£ºÉèÖÃ×´Ì¬ true or false
   *
-  * @return	void
+  * @return void
   * @remark
   */
 void GPIO_SetLed0(uint8_t state)
@@ -65,10 +65,10 @@ void GPIO_SetLed0(uint8_t state)
 }
 
 /**
-  * @brief	LED1ÉèÖÃ
-  * @param	state£ºÉèÖÃ×´Ì¬ true or false
+  * @brief  LED1ÉèÖÃ
+  * @param  state£ºÉèÖÃ×´Ì¬ true or false
   *
-  * @return	void
+  * @return void
   * @remark
   */
 void GPIO_SetLed1(uint8_t state)
