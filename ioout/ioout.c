@@ -13,7 +13,8 @@
   * [2017-08-23] <redoc> v3.0
   * 1.更改依赖，依赖c库文件
   * 2.更改部分函数错误处理
-  *
+  * [2017-08-29] <redoc> v3.1
+  * 1.添加函数指针判断
   * @remark
   */
 
@@ -114,6 +115,11 @@ static iooutErrCode_Typedef ioout_LinkToIO(uint16_t index,IOOUTCALLBACK handle)
         return IOOUT_ERR_MAX;
     }
 
+    if(handle == NULL)
+    {
+        return IOOUT_ERR_PARAM;
+    }
+
     m_nIoOutList[index].handle = handle;
     m_nIoOutList[index].valid_enable     = true;
 
@@ -133,6 +139,7 @@ static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index)
     {
         return IOOUT_ERR_MAX;
     }
+
 
     m_nIoOutList[index].handle(false);
     m_nIoOutList[index].interval 		= 0;
@@ -311,6 +318,16 @@ iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
     if(false == iooutInitFlag)
     {
         return IOOUT_ERR_INIT;
+    }
+
+    if(iooutId > IOOUT_MAX)
+    {
+        return IOOUT_ERR_MAX;
+    }
+
+    if(timproc == NULL)
+    {
+        return IOOUT_ERR_PARAM;
     }
 
     if(IOOUT_NO_ERR != ioout_GetIOIndex((uint16_t *)(iooutIdBuf + (uint8_t)iooutId)))
