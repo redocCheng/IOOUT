@@ -44,19 +44,23 @@ typedef enum
 {
     ID_IOOUT_LED0 = 0,
 	ID_IOOUT_LED1,
-
+    
+    
+    ID_IOOUT_MAX,
 } iooutId_Typedef;
+
+/*------------- 移植配置End */
 
 /**
   * @brief IO输出控制数量类型定义
   */
 typedef enum
 {
-    IOOUT_MAX = (ID_IOOUT_LED1 + 1),
+    IOOUT_MAX = ID_IOOUT_MAX,
 
 } ioOutIndexNum_Typedef;
 
-/*------------- 移植配置End */
+
 
 
 /**
@@ -64,11 +68,11 @@ typedef enum
   */
 typedef enum
 {
-    IOOUT_ERR_INIT = -4,        /**<  初始化错误  */
-    IOOUT_ERR_PARAM = -3,       /**<  参数输入错误  */
-    IOOUT_ERR_FAIL = -2,        /**<  申请失败  */
-    IOOUT_ERR_MAX = -1,         /**<  超过最大值  */
-    IOOUT_NO_ERR = 0,           /**<  无错误  */
+    IOOUT_ERR_INIT  = -4,        /**<  初始化错误   */
+    IOOUT_ERR_PARAM = -3,        /**<  参数输入错误 */
+    IOOUT_ERR_FAIL  = -2,        /**<  申请失败     */
+    IOOUT_ERR_MAX   = -1,        /**<  超过最大值   */
+    IOOUT_NO_ERR    =  0,        /**<  无错误       */
 
 }iooutErrCode_Typedef;
 
@@ -77,16 +81,16 @@ typedef enum
   */
 typedef struct
 {
-    uint32_t interval;          /**<  间隔时间（占空比低）  */
-    uint32_t workTime;          /**<  持续时间（占空比高）  */
-    uint32_t ctlTime;           /**<  总时间  */
-    uint32_t curCount;          /**<  单周期计数  */
-    uint32_t sumCount;          /**<  总时间计数  */
-    uint8_t enable;             /**<  使能  */
-    uint8_t valid_enable;       /**<  是否有效，true表示有效，正在使用，false表示无效，可以分配  */
-    uint8_t ioCtl;              /**<  控制变化标志  */
-    uint16_t index;             /**<  序号  */
-    IOOUTCALLBACK handle;       /**<  函数指针  */
+    uint16_t      interval;          /**<  间隔时间（占空比低）  */
+    uint16_t      workTime;          /**<  持续时间（占空比高）  */
+    uint32_t      ctlTime;           /**<  总时间                */
+    uint16_t      curCount;          /**<  单周期计数            */
+    uint32_t      sumCount;          /**<  总时间计数            */
+    uint8_t       enable       :1;   /**<  使能                  */
+    uint8_t       valid_enable :1;   /**<  是否有效，            */
+    uint8_t       ioCtl        :6;   /**<  控制变化标志          */
+    uint16_t      index;             /**<  序号                  */
+    IOOUTCALLBACK handle;            /**<  函数指针              */
 } ioOut_Typedef;
 
 
@@ -96,7 +100,7 @@ typedef struct
 /* functions --------------------------------------------------------*/
 void ioout_Config(void);
 iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc);
-iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint32_t interval,uint32_t workTime,uint32_t ctltime);
+iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint16_t interval,uint16_t workTime,uint32_t ctltime);
 iooutErrCode_Typedef ioout_Stop(iooutId_Typedef iooutId);
 iooutErrCode_Typedef ioout_Start(iooutId_Typedef iooutId);
 iooutErrCode_Typedef ioout_Pause(iooutId_Typedef iooutId);

@@ -15,6 +15,9 @@
   * 2.更改部分函数错误处理
   * [2017-08-29] <redoc> v3.1
   * 1.添加函数指针判断
+  * [2017-08-29] <redoc> v3.2
+  * 1、【优化】数据结构中参数，占用RAM有所减少；
+  * 
   * @remark
   */
 
@@ -278,7 +281,7 @@ static iooutErrCode_Typedef ioout_SetPauseIO(uint16_t index)
   * @return	iooutErrCode_Typedef
   * @remark ms为单位,参数必须是查询时间的整数倍，此函数不允许worktime为零
   */
-static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint32_t interval,uint32_t workTime,uint32_t ctltime)
+static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint16_t interval,uint16_t workTime,uint32_t ctltime)
 {
     if(index == 0xFFFF)
     {
@@ -353,7 +356,7 @@ iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
   * @return	iooutErrCode_Typedef
   * @remark 时间以ms为单位,参数必须是查询时间的整数倍，worktime为0停止，ctltime为0一直保持周期
   */
-iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint32_t interval,uint32_t workTime,uint32_t ctlTime)
+iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint16_t interval,uint16_t workTime,uint32_t ctlTime)
 {
     iooutErrCode_Typedef status;
 
