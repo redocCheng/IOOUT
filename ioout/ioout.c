@@ -35,7 +35,7 @@ const uint16_t ioout_Time_Interval = 10;            /**< 查询间隔    */
 /* variables ---------------------------------------------------------*/
 static ioOut_Typedef m_nIoOutList[IOOUT_MAX];       /**<  IO管理表   */
 static uint16_t iooutIdBuf[IOOUT_MAX] ;             /**<  IOID表   */
-static uint8_t iooutInitFlag = false;                  /**<  ioout初始化标志   */
+static uint8_t iooutInitFlag = false;               /**<  ioout初始化标志   */
 
 /* functions ---------------------------------------------------------*/
 static void ioout_ListInit(void);
@@ -145,15 +145,15 @@ static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index)
 
 
     m_nIoOutList[index].handle(false);
-    m_nIoOutList[index].interval 		= 0;
+    m_nIoOutList[index].interval        = 0;
     m_nIoOutList[index].workTime        = 0;
-    m_nIoOutList[index].ctlTime 		= 0;
-    m_nIoOutList[index].curCount    	= 0;
-    m_nIoOutList[index].sumCount   	 	= 0;
-    m_nIoOutList[index].handle      	= NULL;
-    m_nIoOutList[index].index       	= 0xFFFF;
-    m_nIoOutList[index].ioCtl         	= false;
-    m_nIoOutList[index].enable      	= false;
+    m_nIoOutList[index].ctlTime         = 0;
+    m_nIoOutList[index].curCount        = 0;
+    m_nIoOutList[index].sumCount        = 0;
+    m_nIoOutList[index].handle          = NULL;
+    m_nIoOutList[index].index           = 0xFFFF;
+    m_nIoOutList[index].ioCtl           = false;
+    m_nIoOutList[index].enable          = false;
     m_nIoOutList[index].valid_enable    = false;
 
     return IOOUT_NO_ERR;
@@ -198,7 +198,7 @@ static iooutErrCode_Typedef ioout_SetStartIO(uint16_t index)
 
     if(false == m_nIoOutList[index].enable)
     {
-        m_nIoOutList[index].enable     = true;
+        m_nIoOutList[index].enable = true;
     }
 
     return IOOUT_NO_ERR;
@@ -242,12 +242,12 @@ static iooutErrCode_Typedef ioout_SetStopIO(uint16_t index)
 
     m_nIoOutList[index].handle(false);
 
-    m_nIoOutList[index].interval 		= 0;
-    m_nIoOutList[index].workTime 	    = 0;
-    m_nIoOutList[index].ctlTime 		= 0;
-    m_nIoOutList[index].curCount    	= 0;
-    m_nIoOutList[index].sumCount   	 	= 0;
-    m_nIoOutList[index].enable      	= false;
+    m_nIoOutList[index].interval   = 0;
+    m_nIoOutList[index].workTime   = 0;
+    m_nIoOutList[index].ctlTime    = 0;
+    m_nIoOutList[index].curCount   = 0;
+    m_nIoOutList[index].sumCount   = 0;
+    m_nIoOutList[index].enable     = false;
 
     return IOOUT_NO_ERR;
 }
@@ -266,7 +266,7 @@ static iooutErrCode_Typedef ioout_SetPauseIO(uint16_t index)
     }
 
     m_nIoOutList[index].handle(false);
-    m_nIoOutList[index].enable     = false;
+    m_nIoOutList[index].enable = false;
 
     return IOOUT_NO_ERR;
 }
@@ -300,11 +300,11 @@ static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint16_t interval,uin
         return IOOUT_ERR_PARAM;
     }
 
-    m_nIoOutList[index].interval 		= interval;
-    m_nIoOutList[index].workTime	    = workTime;
-    m_nIoOutList[index].ctlTime			= ctltime;
-    m_nIoOutList[index].sumCount    	= 0;
-    m_nIoOutList[index].enable       	= true;
+    m_nIoOutList[index].interval        = interval;
+    m_nIoOutList[index].workTime        = workTime;
+    m_nIoOutList[index].ctlTime	        = ctltime;
+    m_nIoOutList[index].sumCount        = 0;
+    m_nIoOutList[index].enable          = true;
 
     return IOOUT_NO_ERR;
 }
@@ -498,8 +498,8 @@ void ioout_CallBackProcRoutine(void)
                     if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
                     {
                         m_nIoOutList[i].handle(false);
-                        m_nIoOutList[i].sumCount	= 0;
-                        m_nIoOutList[i].ioCtl		= false;
+                        m_nIoOutList[i].sumCount    = 0;
+                        m_nIoOutList[i].ioCtl       = false;
                         m_nIoOutList[i].enable      = false;
 
                     }
@@ -517,8 +517,8 @@ void ioout_CallBackProcRoutine(void)
                     {
                         m_nIoOutList[i].handle(false);
                         m_nIoOutList[i].sumCount = 0;
-                        m_nIoOutList[i].enable = false;
-                        m_nIoOutList[i].ioCtl = false;
+                        m_nIoOutList[i].enable   = false;
+                        m_nIoOutList[i].ioCtl    = false;
                         m_nIoOutList[i].curCount = 0;
                         continue;
                     }
@@ -537,7 +537,7 @@ void ioout_CallBackProcRoutine(void)
                     if(m_nIoOutList[i].curCount >= m_nIoOutList[i].workTime)
                     {
                         m_nIoOutList[i].handle(false);
-                        m_nIoOutList[i].ioCtl = false;
+                        m_nIoOutList[i].ioCtl    = false;
                         m_nIoOutList[i].curCount = 0;
                     }
                 }
@@ -547,7 +547,7 @@ void ioout_CallBackProcRoutine(void)
                     if(m_nIoOutList[i].curCount >= m_nIoOutList[i].interval)
                     {
                         m_nIoOutList[i].handle(true);
-                        m_nIoOutList[i].ioCtl = true;
+                        m_nIoOutList[i].ioCtl    = true;
                         m_nIoOutList[i].curCount = 0;
                     }
                 }
