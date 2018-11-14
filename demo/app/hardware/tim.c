@@ -100,7 +100,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if(htim == &htim3)
     {
-        ioout_CallBackProcRoutine();
+        ioout_callback_process();
     }
 }
 

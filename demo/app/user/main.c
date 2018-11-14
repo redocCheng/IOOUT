@@ -48,22 +48,22 @@ int main(void)
     DISABLE_INT();
 
     BSP_Init();
-    ioout_Config();
+    ioout_config();
 
     ENABLE_INT();
 
-    ioout_Set(ID_IOOUT_LED0,1000,1000,0);
-    ioout_Set(ID_IOOUT_LED1,200,200,0);
+    ioout_set(ID_IOOUT_LED1,1000,1000,0);
+    ioout_set(ID_IOOUT_LED2,200,200,0);
 
     while (1)
     {
-        ioout_Pause(ID_IOOUT_LED1);
+        ioout_pause(ID_IOOUT_LED1);
         HAL_Delay(1000);
-        ioout_Start(ID_IOOUT_LED1);
+        ioout_start(ID_IOOUT_LED2);
         HAL_Delay(1000);
-        ioout_Stop(ID_IOOUT_LED1);
+        ioout_stop(ID_IOOUT_LED1);
         HAL_Delay(1000);
-        ioout_Set(ID_IOOUT_LED1,200,200,2000);
+        ioout_set(ID_IOOUT_LED2,200,200,2000);
         HAL_Delay(5000);
 
     }

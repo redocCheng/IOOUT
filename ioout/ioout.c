@@ -13,65 +13,52 @@
   * [2017-08-23] <redoc> v3.0
   * 1.更改依赖，依赖c库文件
   * 2.更改部分函数错误处理
-  * [2017-08-29] <redoc> v3.1
-  * 1.添加函数指针判断
-  * [2017-08-29] <redoc> v3.2
-  * 1、【优化】数据结构中参数，占用RAM有所减少；
-  * 
+  *
   * @remark
   */
 
 /* Includes ------------------------------------------------------------------*/
 #include "ioout.h"
-#include "gpio.h"
+
 
 
 /* typedef -----------------------------------------------------------*/
 /* define ------------------------------------------------------------*/
 /* constants ---------------------------------------------------------*/
-const uint16_t ioout_Time_Interval = 10;            /**< 查询间隔    */
+const uint16_t ioout_Time_Interval = 5;            /**< 查询间隔    */
 
 
 /* variables ---------------------------------------------------------*/
-static ioOut_Typedef m_nIoOutList[IOOUT_MAX];       /**<  IO管理表   */
-static uint16_t iooutIdBuf[IOOUT_MAX] ;             /**<  IOID表   */
-static uint8_t iooutInitFlag = false;               /**<  ioout初始化标志   */
+static ioout_t m_ioout_list[IOOUT_MAX];       /**<  IO管理表   */
+static uint16_t ioout_id_buf[IOOUT_MAX] ;             /**<  IOID表   */
+static uint8_t ioout_list_init_flag = false;                  /**<  ioout表初始化标志   */
+static uint8_t ioout_init_flag = false;
 
 /* functions ---------------------------------------------------------*/
-static void ioout_ListInit(void);
-static iooutErrCode_Typedef ioout_GetIOIndex(uint16_t *sIndex);
-static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index);
-static iooutErrCode_Typedef ioout_LinkToIO(uint16_t index,IOOUTCALLBACK handle);
-static iooutErrCode_Typedef ioout_SetStartIO(uint16_t index);
-static iooutErrCode_Typedef ioout_KillIO(uint16_t *sIndex);
-static iooutErrCode_Typedef ioout_SetStopIO(uint16_t index);
-static iooutErrCode_Typedef ioout_SetPauseIO(uint16_t index);
-static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint32_t interval,uint32_t beeptime,uint32_t ctltime);
+static void ioout_list_init(void);
+static ioout_err_t ioout_get_index_io(uint16_t *sIndex);
+static ioout_err_t ioout_unlink_io(uint16_t index);
+static ioout_err_t ioout_link_io(uint16_t index,IOOUTCALLBACK handle);
+static ioout_err_t ioout_start_io(uint16_t index);
+static ioout_err_t ioout_kill_io(uint16_t *sIndex);
+static ioout_err_t ioout_stop_io(uint16_t index);
+static ioout_err_t ioout_pause_io(uint16_t index);
+static ioout_err_t ioout_set_param_io(uint16_t index,uint32_t interval,uint32_t beeptime,uint32_t ctltime);
 
 /**
-  * @brief	配置ioout
-  * @param	void
+  * @brief  配置ioout
+  * @param  void
   *
-  * @return	void
+  * @return void
   * @remark
   */
-void ioout_Config(void)
+void ioout_config(void)
 {
-    ioout_ListInit();
+    ioout_list_init();
 
-    /*--------------- 移植配置Start */
-
-    if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED0,GPIO_SetLed0))
-    {
-    	//do something
-    }
-
-    if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED1,GPIO_SetLed1))
-    {
-        //do something
-    }
-
-    /*--------------- 移植配置End */
+	ioout_port_init();
+		
+	ioout_init_flag = true;
 }
 
 /**
@@ -81,26 +68,26 @@ void ioout_Config(void)
   * @return	无
   * @remark
   */
-static void ioout_ListInit(void)
+static void ioout_list_init(void)
 {
     uint16_t i = 0;
 
     for(i = 0; i < IOOUT_MAX; i++)
     {
-        m_nIoOutList[i].interval        = 0;
-        m_nIoOutList[i].workTime        = 0;
-        m_nIoOutList[i].ctlTime         = 0;
-        m_nIoOutList[i].curCount        = 0;
-        m_nIoOutList[i].sumCount        = 0;
-        m_nIoOutList[i].handle          = NULL;
-        m_nIoOutList[i].enable          = false;
-        m_nIoOutList[i].valid_enable    = false;
-        m_nIoOutList[i].ioCtl           = false;
-        m_nIoOutList[i].index           = 0xFFFF;
-        iooutIdBuf[i]                   = 0xFFFF;
+        m_ioout_list[i].interval        = 0;
+        m_ioout_list[i].workTime        = 0;
+        m_ioout_list[i].ctlTime         = 0;
+        m_ioout_list[i].curCount        = 0;
+        m_ioout_list[i].sumCount        = 0;
+        m_ioout_list[i].handle          = NULL;
+        m_ioout_list[i].enable          = false;
+        m_ioout_list[i].valid_enable    = false;
+        m_ioout_list[i].ioCtl           = false;
+        m_ioout_list[i].index           = 0xFFFF;
+        ioout_id_buf[i]                   = 0xFFFF;
     }
 
-    iooutInitFlag = true;
+    ioout_list_init_flag = true;
 }
 
 /**
@@ -111,7 +98,7 @@ static void ioout_ListInit(void)
   * @return	设置状态
   * @remark
   */
-static iooutErrCode_Typedef ioout_LinkToIO(uint16_t index,IOOUTCALLBACK handle)
+static ioout_err_t ioout_link_io(uint16_t index,IOOUTCALLBACK handle)
 {
     if(index > IOOUT_MAX)
     {
@@ -123,8 +110,8 @@ static iooutErrCode_Typedef ioout_LinkToIO(uint16_t index,IOOUTCALLBACK handle)
         return IOOUT_ERR_PARAM;
     }
 
-    m_nIoOutList[index].handle = handle;
-    m_nIoOutList[index].valid_enable     = true;
+    m_ioout_list[index].handle = handle;
+    m_ioout_list[index].valid_enable     = true;
 
     return IOOUT_NO_ERR;
 }
@@ -136,7 +123,7 @@ static iooutErrCode_Typedef ioout_LinkToIO(uint16_t index,IOOUTCALLBACK handle)
   * @return	设置状态
   * @remark
   */
-static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index)
+static ioout_err_t ioout_unlink_io(uint16_t index)
 {
     if(index > IOOUT_MAX)
     {
@@ -144,17 +131,17 @@ static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index)
     }
 
 
-    m_nIoOutList[index].handle(false);
-    m_nIoOutList[index].interval        = 0;
-    m_nIoOutList[index].workTime        = 0;
-    m_nIoOutList[index].ctlTime         = 0;
-    m_nIoOutList[index].curCount        = 0;
-    m_nIoOutList[index].sumCount        = 0;
-    m_nIoOutList[index].handle          = NULL;
-    m_nIoOutList[index].index           = 0xFFFF;
-    m_nIoOutList[index].ioCtl           = false;
-    m_nIoOutList[index].enable          = false;
-    m_nIoOutList[index].valid_enable    = false;
+    m_ioout_list[index].handle(false);
+    m_ioout_list[index].interval 		= 0;
+    m_ioout_list[index].workTime        = 0;
+    m_ioout_list[index].ctlTime 		= 0;
+    m_ioout_list[index].curCount    	= 0;
+    m_ioout_list[index].sumCount   	 	= 0;
+    m_ioout_list[index].handle      	= NULL;
+    m_ioout_list[index].index       	= 0xFFFF;
+    m_ioout_list[index].ioCtl         	= false;
+    m_ioout_list[index].enable      	= false;
+    m_ioout_list[index].valid_enable    = false;
 
     return IOOUT_NO_ERR;
 }
@@ -166,13 +153,13 @@ static iooutErrCode_Typedef ioout_SetUnlinkIO(uint16_t index)
   * @return	设置状态
   * @remark
   */
-static iooutErrCode_Typedef ioout_GetIOIndex(uint16_t *sIndex)
+static ioout_err_t ioout_get_index_io(uint16_t *sIndex)
 {
     uint16_t i = 0;
 
     for(i = 0; i < IOOUT_MAX; i++)
     {
-        if(false == m_nIoOutList[i].valid_enable)
+        if(false == m_ioout_list[i].valid_enable)
         {
             *sIndex = i;
             return IOOUT_NO_ERR;
@@ -189,16 +176,16 @@ static iooutErrCode_Typedef ioout_GetIOIndex(uint16_t *sIndex)
   * @return	设置状态
   * @remark
   */
-static iooutErrCode_Typedef ioout_SetStartIO(uint16_t index)
+static ioout_err_t ioout_start_io(uint16_t index)
 {
     if(index == 0xFFFF)
     {
         return IOOUT_ERR_INIT;
     }
 
-    if(false == m_nIoOutList[index].enable)
+    if(false == m_ioout_list[index].enable)
     {
-        m_nIoOutList[index].enable = true;
+        m_ioout_list[index].enable     = true;
     }
 
     return IOOUT_NO_ERR;
@@ -212,14 +199,14 @@ static iooutErrCode_Typedef ioout_SetStartIO(uint16_t index)
   * @return	设置状态
   * @remark	不可恢复，释放资源
   */
-static iooutErrCode_Typedef ioout_KillIO(uint16_t *sIndex)
+static ioout_err_t ioout_kill_io(uint16_t *sIndex)
 {
     if(*sIndex == 0xFFFF)
     {
         return IOOUT_ERR_INIT;
     }
 
-    ioout_SetUnlinkIO(*sIndex);
+    ioout_unlink_io(*sIndex);
     *sIndex = 0xffff;
 
     return IOOUT_NO_ERR;
@@ -232,7 +219,7 @@ static iooutErrCode_Typedef ioout_KillIO(uint16_t *sIndex)
   * @return	设置状态
   * @remark	不释放资源，放弃当前任务，不可恢复
   */
-static iooutErrCode_Typedef ioout_SetStopIO(uint16_t index)
+static ioout_err_t ioout_stop_io(uint16_t index)
 {
     if(index == 0xFFFF)
     {
@@ -240,14 +227,14 @@ static iooutErrCode_Typedef ioout_SetStopIO(uint16_t index)
     }
 
 
-    m_nIoOutList[index].handle(false);
+    m_ioout_list[index].handle(false);
 
-    m_nIoOutList[index].interval   = 0;
-    m_nIoOutList[index].workTime   = 0;
-    m_nIoOutList[index].ctlTime    = 0;
-    m_nIoOutList[index].curCount   = 0;
-    m_nIoOutList[index].sumCount   = 0;
-    m_nIoOutList[index].enable     = false;
+    m_ioout_list[index].interval 		= 0;
+    m_ioout_list[index].workTime 	    = 0;
+    m_ioout_list[index].ctlTime 		= 0;
+    m_ioout_list[index].curCount    	= 0;
+    m_ioout_list[index].sumCount   	 	= 0;
+    m_ioout_list[index].enable      	= false;
 
     return IOOUT_NO_ERR;
 }
@@ -258,15 +245,15 @@ static iooutErrCode_Typedef ioout_SetStopIO(uint16_t index)
   * @return	设置状态
   * @remark	暂停当前任务，恢复继续当前任务
   */
-static iooutErrCode_Typedef ioout_SetPauseIO(uint16_t index)
+static ioout_err_t ioout_pause_io(uint16_t index)
 {
     if(index == 0xFFFF)
     {
         return IOOUT_ERR_INIT;
     }
 
-    m_nIoOutList[index].handle(false);
-    m_nIoOutList[index].enable = false;
+    m_ioout_list[index].handle(false);
+    m_ioout_list[index].enable     = false;
 
     return IOOUT_NO_ERR;
 }
@@ -278,10 +265,10 @@ static iooutErrCode_Typedef ioout_SetPauseIO(uint16_t index)
   * @param	worktime：持续时间
   * @param	ctltime：总时间
   *
-  * @return	iooutErrCode_Typedef
+  * @return	ioout_err_t
   * @remark ms为单位,参数必须是查询时间的整数倍，此函数不允许worktime为零
   */
-static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint16_t interval,uint16_t workTime,uint32_t ctltime)
+static ioout_err_t ioout_set_param_io(uint16_t index,uint32_t interval,uint32_t workTime,uint32_t ctltime)
 {
     if(index == 0xFFFF)
     {
@@ -300,11 +287,11 @@ static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint16_t interval,uin
         return IOOUT_ERR_PARAM;
     }
 
-    m_nIoOutList[index].interval        = interval;
-    m_nIoOutList[index].workTime        = workTime;
-    m_nIoOutList[index].ctlTime	        = ctltime;
-    m_nIoOutList[index].sumCount        = 0;
-    m_nIoOutList[index].enable          = true;
+    m_ioout_list[index].interval 		= interval;
+    m_ioout_list[index].workTime	    = workTime;
+    m_ioout_list[index].ctlTime			= ctltime;
+    m_ioout_list[index].sumCount    	= 0;
+    m_ioout_list[index].enable       	= true;
 
     return IOOUT_NO_ERR;
 }
@@ -316,14 +303,14 @@ static iooutErrCode_Typedef ioout_SetParmIO(uint16_t index,uint16_t interval,uin
   * @return	IO口号
   * @remark
   */
-iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
+ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)
 {
-    if(false == iooutInitFlag)
+    if(false == ioout_list_init_flag)
     {
         return IOOUT_ERR_INIT;
     }
 
-    if(iooutId > IOOUT_MAX)
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
@@ -333,12 +320,12 @@ iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
         return IOOUT_ERR_PARAM;
     }
 
-    if(IOOUT_NO_ERR != ioout_GetIOIndex((uint16_t *)(iooutIdBuf + (uint8_t)iooutId)))
+    if(IOOUT_NO_ERR != ioout_get_index_io((uint16_t *)(ioout_id_buf + (uint8_t)ioout_id)))
     {
         return IOOUT_ERR_FAIL;
     }
 
-    if(IOOUT_NO_ERR != ioout_LinkToIO(iooutIdBuf[iooutId],timproc))
+    if(IOOUT_NO_ERR != ioout_link_io(ioout_id_buf[ioout_id],timproc))
     {
         return IOOUT_ERR_FAIL;
     }
@@ -348,30 +335,35 @@ iooutErrCode_Typedef ioout_Init(iooutId_Typedef iooutId,IOOUTCALLBACK timproc)
 
 /**
   * @brief	设置IO并启动
-  * @param	iooutId:输出口ID
+  * @param	ioout_id:输出口ID
   * @param	interval：间隔时间
   * @param	worktime：持续时间
   * @param	ctltime：总时间
   *
-  * @return	iooutErrCode_Typedef
+  * @return	ioout_err_t
   * @remark 时间以ms为单位,参数必须是查询时间的整数倍，worktime为0停止，ctltime为0一直保持周期
   */
-iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint16_t interval,uint16_t workTime,uint32_t ctlTime)
+ioout_err_t ioout_set(ioout_id_t ioout_id,uint32_t interval,uint32_t workTime,uint32_t ctlTime)
 {
-    iooutErrCode_Typedef status;
+    ioout_err_t status;
 
-    if(iooutId > IOOUT_MAX)
+	if(false == ioout_init_flag)
+	{
+		ioout_config();
+	}
+	
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
     if(workTime != 0)
     {
-        status == ioout_SetParmIO(iooutIdBuf[iooutId],interval,workTime,ctlTime);
+        status == ioout_set_param_io(ioout_id_buf[ioout_id],interval,workTime,ctlTime);
 
         if(IOOUT_NO_ERR == status)
         {
-            ioout_SetStartIO(iooutIdBuf[iooutId]);
+            ioout_start_io(ioout_id_buf[ioout_id]);
         }
         else
         {
@@ -380,7 +372,7 @@ iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint16_t interval,uint16_
     }
     else
     {
-        ioout_SetStopIO(iooutIdBuf[iooutId]);
+        ioout_stop_io(ioout_id_buf[ioout_id]);
     }
 
     return IOOUT_NO_ERR;
@@ -388,74 +380,94 @@ iooutErrCode_Typedef ioout_Set(iooutId_Typedef iooutId,uint16_t interval,uint16_
 
 /**
   * @brief	停止,数据清零
-  * @param	iooutId:输出口ID
+  * @param	ioout_id:输出口ID
   *
-  * @return	iooutErrCode_Typedef
+  * @return	ioout_err_t
   * @remark
   */
-iooutErrCode_Typedef ioout_Stop(iooutId_Typedef iooutId)
+ioout_err_t ioout_stop(ioout_id_t ioout_id)
 {
-    if(iooutId > IOOUT_MAX)
+	if(false == ioout_init_flag)
+	{
+		ioout_config();
+	}
+	
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
-    return ioout_SetStopIO(iooutIdBuf[iooutId]);
+    return ioout_stop_io(ioout_id_buf[ioout_id]);
 }
 
 /**
   * @brief	启动
-  * @param	iooutId:输出口ID
+  * @param	ioout_id:输出口ID
   *
-  * @return	iooutErrCode_Typedef
+  * @return	ioout_err_t
   * @remark
   */
-iooutErrCode_Typedef ioout_Start(iooutId_Typedef iooutId)
+ioout_err_t ioout_start(ioout_id_t ioout_id)
 {
-    if(iooutId > IOOUT_MAX)
+	if(false == ioout_init_flag)
+	{
+		ioout_config();
+	}
+	
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
-    return ioout_SetStartIO(iooutIdBuf[iooutId]);
+    return ioout_start_io(ioout_id_buf[ioout_id]);
 }
 
 /**
   * @brief	暂停，数据不清零
-  * @param	iooutId:输出口ID
+  * @param	ioout_id:输出口ID
   *
-  * @return	iooutErrCode_Typedef
+  * @return	ioout_err_t
   * @remark
   */
-iooutErrCode_Typedef ioout_Pause(iooutId_Typedef iooutId)
+ioout_err_t ioout_pause(ioout_id_t ioout_id)
 {
-    if(iooutId > IOOUT_MAX)
+	if(false == ioout_init_flag)
+	{
+		ioout_config();
+	}
+	
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
-    return ioout_SetPauseIO(iooutIdBuf[iooutId]);
+    return ioout_pause_io(ioout_id_buf[ioout_id]);
 }
 
 /**
   * @brief	删除
-  * @param	iooutId:输出口ID
+  * @param	ioout_id:输出口ID
   *
-  * @return	iooutId
+  * @return	ioout_id
   * @remark 不建议使用
   */
-iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
+ioout_err_t ioout_kill(ioout_id_t ioout_id)
 {
+	if(false == ioout_init_flag)
+	{
+		ioout_config();
+	}
+	
     int16_t id;
 
-    if(iooutId > IOOUT_MAX)
+    if(ioout_id > IOOUT_MAX)
     {
         return IOOUT_ERR_MAX;
     }
 
-    id = iooutId;
+    id = ioout_id;
 
-    return ioout_KillIO((uint16_t *)(iooutIdBuf + id));
+    return ioout_kill_io((uint16_t *)(ioout_id_buf + id));
 }
 
 
@@ -466,7 +478,7 @@ iooutErrCode_Typedef ioout_Kill(iooutId_Typedef iooutId)
   * @return	无
   * @remark
   */
-void ioout_CallBackProcRoutine(void)
+void ioout_callback_process(void)
 {
     const uint16_t xfer_count = ioout_Time_Interval;
     uint8_t i;
@@ -474,33 +486,33 @@ void ioout_CallBackProcRoutine(void)
     for(i = 0;i < IOOUT_MAX;i++)
     {
         /*  IO口号未使能  */
-        if(m_nIoOutList[i].valid_enable && !m_nIoOutList[i].enable)
+        if(m_ioout_list[i].valid_enable && !m_ioout_list[i].enable)
         {
-            m_nIoOutList[i].handle(false);
-            m_nIoOutList[i].sumCount     = 0;
+            m_ioout_list[i].handle(false);
+            m_ioout_list[i].sumCount     = 0;
             continue;
         }
 
         /*  IO口号使能  */
-        if(m_nIoOutList[i].valid_enable && m_nIoOutList[i].enable)
+        if(m_ioout_list[i].valid_enable && m_ioout_list[i].enable)
         {
             /*  无间隔   */
-            if(0 == m_nIoOutList[i].interval)
+            if(0 == m_ioout_list[i].interval)
             {
 
-                m_nIoOutList[i].handle(true);
+                m_ioout_list[i].handle(true);
 
                 /*  计时  */
-                if(m_nIoOutList[i].ctlTime)
+                if(m_ioout_list[i].ctlTime)
                 {
-                    m_nIoOutList[i].sumCount += xfer_count;
+                    m_ioout_list[i].sumCount += xfer_count;
 
-                    if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
+                    if(m_ioout_list[i].sumCount >= m_ioout_list[i].ctlTime)
                     {
-                        m_nIoOutList[i].handle(false);
-                        m_nIoOutList[i].sumCount    = 0;
-                        m_nIoOutList[i].ioCtl       = false;
-                        m_nIoOutList[i].enable      = false;
+                        m_ioout_list[i].handle(false);
+                        m_ioout_list[i].sumCount	= 0;
+                        m_ioout_list[i].ioCtl		= false;
+                        m_ioout_list[i].enable      = false;
 
                     }
                 }
@@ -508,47 +520,47 @@ void ioout_CallBackProcRoutine(void)
             /*  有间隔   */
             else
             {
-                m_nIoOutList[i].sumCount += xfer_count;
+                m_ioout_list[i].sumCount += xfer_count;
 
                 /*  总时间  */
-                if(m_nIoOutList[i].ctlTime)
+                if(m_ioout_list[i].ctlTime)
                 {
-                    if(m_nIoOutList[i].sumCount >= m_nIoOutList[i].ctlTime)
+                    if(m_ioout_list[i].sumCount >= m_ioout_list[i].ctlTime)
                     {
-                        m_nIoOutList[i].handle(false);
-                        m_nIoOutList[i].sumCount = 0;
-                        m_nIoOutList[i].enable   = false;
-                        m_nIoOutList[i].ioCtl    = false;
-                        m_nIoOutList[i].curCount = 0;
+                        m_ioout_list[i].handle(false);
+                        m_ioout_list[i].sumCount = 0;
+                        m_ioout_list[i].enable = false;
+                        m_ioout_list[i].ioCtl = false;
+                        m_ioout_list[i].curCount = 0;
                         continue;
                     }
                 }
                 else
                 {
-                	m_nIoOutList[i].sumCount=0;
+                	m_ioout_list[i].sumCount=0;
                 }
 
-                m_nIoOutList[i].curCount += xfer_count;
-                m_nIoOutList[i].handle(m_nIoOutList[i].ioCtl);
+                m_ioout_list[i].curCount += xfer_count;
+                m_ioout_list[i].handle(m_ioout_list[i].ioCtl);
 
                 /*  持续时间  */
-                if(true == m_nIoOutList[i].ioCtl)
+                if(true == m_ioout_list[i].ioCtl)
                 {
-                    if(m_nIoOutList[i].curCount >= m_nIoOutList[i].workTime)
+                    if(m_ioout_list[i].curCount >= m_ioout_list[i].workTime)
                     {
-                        m_nIoOutList[i].handle(false);
-                        m_nIoOutList[i].ioCtl    = false;
-                        m_nIoOutList[i].curCount = 0;
+                        m_ioout_list[i].handle(false);
+                        m_ioout_list[i].ioCtl = false;
+                        m_ioout_list[i].curCount = 0;
                     }
                 }
                 /*  间隔时间  */
                 else
                 {
-                    if(m_nIoOutList[i].curCount >= m_nIoOutList[i].interval)
+                    if(m_ioout_list[i].curCount >= m_ioout_list[i].interval)
                     {
-                        m_nIoOutList[i].handle(true);
-                        m_nIoOutList[i].ioCtl    = true;
-                        m_nIoOutList[i].curCount = 0;
+                        m_ioout_list[i].handle(true);
+                        m_ioout_list[i].ioCtl = true;
+                        m_ioout_list[i].curCount = 0;
                     }
                 }
 
