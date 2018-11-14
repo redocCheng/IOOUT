@@ -5,7 +5,7 @@ void gpio_set_led1(uint8_t value);
 void gpio_set_led2(uint8_t value);
 
 /**
-  * @brief  ÅäÖÃioout
+  * @brief  é…ç½®ioout
   * @param  void
   *
   * @return void

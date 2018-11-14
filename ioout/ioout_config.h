@@ -32,9 +32,9 @@ typedef enum
 {
 
     ID_IOOUT_LED1=0,
-	ID_IOOUT_LED2,
+    ID_IOOUT_LED2,
 
-	ID_IOOUT_NUM,
+    ID_IOOUT_NUM,
 }ioout_id_t;
 
 /**
