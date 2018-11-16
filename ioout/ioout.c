@@ -1,18 +1,15 @@
 /**
+  * Copyright (c) 2016-2018, redocCheng, <619675912@qq.com>
+  * 
   * @file       ioout.c
-  * @brief      IO输出控制
+  * @brief      IO杈撳嚭鎺у埗鏂囦欢
   * @author     redoc
   * @version    v1.0
   * @date       2016-08-09
   *
   * @note
   * [2016-08-09] <redoc> v1.0
-  * 初始版本
-  * [2017-08-16] <redoc> v2.0
-  * 1.添加IO配置，和直接调用
-  * [2017-08-23] <redoc> v3.0
-  * 1.更改依赖，依赖c库文件
-  * 2.更改部分函数错误处理
+  * 鍒濆鐗堟湰
   *
   * @remark
   */
@@ -25,13 +22,13 @@
 /* typedef -----------------------------------------------------------*/
 /* define ------------------------------------------------------------*/
 /* constants ---------------------------------------------------------*/
-const uint16_t ioout_Time_Interval = 5;            /**< 查询间隔    */
+const uint16_t ioout_Time_Interval = 5;            /**< ?????    */
 
 
 /* variables ---------------------------------------------------------*/
-static ioout_t m_ioout_list[IOOUT_MAX];       /**<  IO管理表   */
-static uint16_t ioout_id_buf[IOOUT_MAX] ;             /**<  IOID表   */
-static uint8_t ioout_list_init_flag = false;                  /**<  ioout表初始化标志   */
+static ioout_t m_ioout_list[IOOUT_MAX];       /**<  IO????  */
+static uint16_t ioout_id_buf[IOOUT_MAX] ;             /**<  IOID??  */
+static uint8_t ioout_list_init_flag = false;                  /**<  ioout???始?????   */
 static uint8_t ioout_init_flag = false;
 
 /* functions ---------------------------------------------------------*/
@@ -46,7 +43,7 @@ static ioout_err_t ioout_pause_io(uint16_t index);
 static ioout_err_t ioout_set_param_io(uint16_t index,uint32_t interval,uint32_t beeptime,uint32_t ctltime);
 
 /**
-  * @brief  配置ioout
+  * @brief  ??ioout
   * @param  void
   *
   * @return void
@@ -62,10 +59,10 @@ void ioout_config(void)
 }
 
 /**
-  * @brief	IO管理表初始化
-  * @param	无
+  * @brief	IO?????始??
+  * @param	?
   *
-  * @return	无
+  * @return	?
   * @remark
   */
 static void ioout_list_init(void)
@@ -91,11 +88,11 @@ static void ioout_list_init(void)
 }
 
 /**
-  * @brief	链接对应序号IO的操纵函数
-  * @param	index：IO口序号
-  * @param	handle：链接函数
+  * @brief	???佣?????O?牟?莺??
+  * @param	index??IO???
+  * @param	handle?????雍??
   *
-  * @return	设置状态
+  * @return	??状态
   * @remark
   */
 static ioout_err_t ioout_link_io(uint16_t index,IOOUTCALLBACK handle)
@@ -117,10 +114,10 @@ static ioout_err_t ioout_link_io(uint16_t index,IOOUTCALLBACK handle)
 }
 
 /**
-  * @brief	清除序号index
-  * @param	index：IO口序号
+  * @brief	??????ndex
+  * @param	index??IO???
   *
-  * @return	设置状态
+  * @return	??状态
   * @remark
   */
 static ioout_err_t ioout_unlink_io(uint16_t index)
@@ -147,10 +144,10 @@ static ioout_err_t ioout_unlink_io(uint16_t index)
 }
 
 /**
-  * @brief	获取控制口的序号
-  * @param	*mindex：IO口序号(传出)
+  * @brief	?????瓶诘??
+  * @param	*mindex??IO???(????)
   *
-  * @return	设置状态
+  * @return	??状态
   * @remark
   */
 static ioout_err_t ioout_get_index_io(uint16_t *sIndex)
@@ -170,10 +167,10 @@ static ioout_err_t ioout_get_index_io(uint16_t *sIndex)
 }
 
 /**
-  * @brief	启动和恢复对应序号的IO
-  * @param	index：IO口序号
+  * @brief	????突指??????诺?O
+  * @param	index??IO???
   *
-  * @return	设置状态
+  * @return	??状态
   * @remark
   */
 static ioout_err_t ioout_start_io(uint16_t index)
@@ -193,11 +190,11 @@ static ioout_err_t ioout_start_io(uint16_t index)
 
 
 /**
-  * @brief	删除对应序号的IO
-  * @param	index：IO口序号
+  * @brief	删???????诺?O
+  * @param	index??IO???
   *
-  * @return	设置状态
-  * @remark	不可恢复，释放资源
+  * @return	??状态
+  * @remark	???苫指????????
   */
 static ioout_err_t ioout_kill_io(uint16_t *sIndex)
 {
@@ -213,11 +210,11 @@ static ioout_err_t ioout_kill_io(uint16_t *sIndex)
 }
 
 /**
-  * @brief	停止对应序号的IO
-  * @param	index：IO口序号
+  * @brief	停止?????诺?O
+  * @param	index??IO???
   *
-  * @return	设置状态
-  * @remark	不释放资源，放弃当前任务，不可恢复
+  * @return	??状态
+  * @remark	??????????????前???????苫指?
   */
 static ioout_err_t ioout_stop_io(uint16_t index)
 {
@@ -239,11 +236,11 @@ static ioout_err_t ioout_stop_io(uint16_t index)
     return IOOUT_NO_ERR;
 }
 /**
-  * @brief	暂停对应序号的IO
-  * @param	index：IO口序号
+  * @brief	?停?????诺?O
+  * @param	index??IO???
   *
-  * @return	设置状态
-  * @remark	暂停当前任务，恢复继续当前任务
+  * @return	??状态
+  * @remark	?停??前?????指??????前??
   */
 static ioout_err_t ioout_pause_io(uint16_t index)
 {
@@ -259,14 +256,14 @@ static ioout_err_t ioout_pause_io(uint16_t index)
 }
 
 /**
-  * @brief	设置对应序号IO参数
-  * @param	index：IO口序号
-  * @param	interval：间隔时间
-  * @param	worktime：持续时间
-  * @param	ctltime：总时间
+  * @brief	????????O???
+  * @param	index??IO???
+  * @param	interval????时??
+  * @param	worktime?????时??
+  * @param	ctltime???时??
   *
   * @return	ioout_err_t
-  * @remark ms为单位,参数必须是查询时间的整数倍，此函数不允许worktime为零
+  * @remark ms为??位,??????遣??时?????????撕??????worktime为??
   */
 static ioout_err_t ioout_set_param_io(uint16_t index,uint32_t interval,uint32_t workTime,uint32_t ctltime)
 {
@@ -297,10 +294,10 @@ static ioout_err_t ioout_set_param_io(uint16_t index,uint32_t interval,uint32_t 
 }
 
 /**
-  * @brief	初始化IOOUT使用接口函数
-  * @param	timproc：IO口接口函数
+  * @brief	??始??IOOUT使??涌诤??
+  * @param	timproc??IO?诮涌诤??
   *
-  * @return	IO口号
+  * @return	IO?诤?
   * @remark
   */
 ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)
@@ -334,14 +331,14 @@ ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)
 }
 
 /**
-  * @brief	设置IO并启动
-  * @param	ioout_id:输出口ID
-  * @param	interval：间隔时间
-  * @param	worktime：持续时间
-  * @param	ctltime：总时间
+  * @brief	??IO?????
+  * @param	ioout_id:?????D
+  * @param	interval????时??
+  * @param	worktime?????时??
+  * @param	ctltime???时??
   *
   * @return	ioout_err_t
-  * @remark 时间以ms为单位,参数必须是查询时间的整数倍，worktime为0停止，ctltime为0一直保持周期
+  * @remark 时???s为??位,??????遣??时????????worktime为0停止??ctltime为0一直??????
   */
 ioout_err_t ioout_set(ioout_id_t ioout_id,uint32_t interval,uint32_t workTime,uint32_t ctlTime)
 {
@@ -379,8 +376,8 @@ ioout_err_t ioout_set(ioout_id_t ioout_id,uint32_t interval,uint32_t workTime,ui
 }
 
 /**
-  * @brief	停止,数据清零
-  * @param	ioout_id:输出口ID
+  * @brief	停止,?????
+  * @param	ioout_id:?????D
   *
   * @return	ioout_err_t
   * @remark
@@ -401,8 +398,8 @@ ioout_err_t ioout_stop(ioout_id_t ioout_id)
 }
 
 /**
-  * @brief	启动
-  * @param	ioout_id:输出口ID
+  * @brief	???
+  * @param	ioout_id:?????D
   *
   * @return	ioout_err_t
   * @remark
@@ -423,8 +420,8 @@ ioout_err_t ioout_start(ioout_id_t ioout_id)
 }
 
 /**
-  * @brief	暂停，数据不清零
-  * @param	ioout_id:输出口ID
+  * @brief	?停????莶????
+  * @param	ioout_id:?????D
   *
   * @return	ioout_err_t
   * @remark
@@ -445,11 +442,11 @@ ioout_err_t ioout_pause(ioout_id_t ioout_id)
 }
 
 /**
-  * @brief	删除
-  * @param	ioout_id:输出口ID
+  * @brief	删??
+  * @param	ioout_id:?????D
   *
   * @return	ioout_id
-  * @remark 不建议使用
+  * @remark ?????使?
   */
 ioout_err_t ioout_kill(ioout_id_t ioout_id)
 {
@@ -472,10 +469,10 @@ ioout_err_t ioout_kill(ioout_id_t ioout_id)
 
 
 /**
-  * @brief	IO控制口处理函数
-  * @param	无
+  * @brief	IO??瓶诖?????
+  * @param	?
   *
-  * @return	无
+  * @return	?
   * @remark
   */
 void ioout_callback_process(void)
@@ -485,7 +482,7 @@ void ioout_callback_process(void)
 
     for(i = 0;i < IOOUT_MAX;i++)
     {
-        /*  IO口号未使能  */
+        /*  IO?诤??使?  */
         if(m_ioout_list[i].valid_enable && !m_ioout_list[i].enable)
         {
             m_ioout_list[i].handle(false);
@@ -493,16 +490,16 @@ void ioout_callback_process(void)
             continue;
         }
 
-        /*  IO口号使能  */
+        /*  IO?诤???  */
         if(m_ioout_list[i].valid_enable && m_ioout_list[i].enable)
         {
-            /*  无间隔   */
+            /*  ???   */
             if(0 == m_ioout_list[i].interval)
             {
 
                 m_ioout_list[i].handle(true);
 
-                /*  计时  */
+                /*  ???  */
                 if(m_ioout_list[i].ctlTime)
                 {
                     m_ioout_list[i].sumCount += xfer_count;
@@ -517,12 +514,12 @@ void ioout_callback_process(void)
                     }
                 }
             }
-            /*  有间隔   */
+            /*  ???   */
             else
             {
                 m_ioout_list[i].sumCount += xfer_count;
 
-                /*  总时间  */
+                /*  ?时?? */
                 if(m_ioout_list[i].ctlTime)
                 {
                     if(m_ioout_list[i].sumCount >= m_ioout_list[i].ctlTime)
@@ -543,7 +540,7 @@ void ioout_callback_process(void)
                 m_ioout_list[i].curCount += xfer_count;
                 m_ioout_list[i].handle(m_ioout_list[i].ioCtl);
 
-                /*  持续时间  */
+                /*  ???时?? */
                 if(true == m_ioout_list[i].ioCtl)
                 {
                     if(m_ioout_list[i].curCount >= m_ioout_list[i].workTime)
@@ -553,7 +550,7 @@ void ioout_callback_process(void)
                         m_ioout_list[i].curCount = 0;
                     }
                 }
-                /*  间隔时间  */
+                /*  ??时?? */
                 else
                 {
                     if(m_ioout_list[i].curCount >= m_ioout_list[i].interval)

@@ -1,4 +1,6 @@
 /**
+  * Copyright (c) 2016-2018, redocCheng, <619675912@qq.com>
+  * 
   * @file       ioout.h
   * @brief      IO输出控制头文件
   * @author     redoc
