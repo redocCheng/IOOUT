@@ -27,18 +27,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 /* types ------------------------------------------------------------*/
-
-/**
-  * @brief 版本号
-  */
-#define IOOUT_SW_VERSION	"1.1.0"
-
 
 /**
   * @brief IO输出控制回调函数类型定义
