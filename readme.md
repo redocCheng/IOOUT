@@ -63,9 +63,7 @@ typedef enum
 ```
 
 ### 2.4 配置相应ID的回掉函数
-使用 `ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)` 进行配置，
-
-其中`timproc` 的格式为 `void gpio_set(uint8_t)`。
+在`ioout_port_init`配置ID的回调函数，具体格式参考 API 章节，
 
 ```
 void ioout_port_init(void)
@@ -82,11 +80,7 @@ void ioout_port_init(void)
     }	
 }
 ```
-### 2.5 初始化
-一般地，需要在`main`函数进行初始化，函数如下：
-```
-ioout_config();
-```
+
 
 
 ## 3. API
