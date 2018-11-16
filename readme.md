@@ -64,6 +64,7 @@ typedef enum
 
 ### 2.4 配置相应ID的回掉函数
 使用 `ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)` 进行配置，
+
 其中`timproc` 的格式为 `void gpio_set(uint8_t)`。
 
 ```
