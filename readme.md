@@ -46,13 +46,16 @@ typedef enum
 ### 2.3 配置控制数量
 ```	
 /**
-  * @brief IO输出控制数量类型定义
+  * @brief IO输出控制ID
   */
 typedef enum
 {
-    IOOUT_MAX = (ID_IOOUT_LED1 + 1),
 
-} ioOutIndexNum_Typedef;
+    ID_IOOUT_LED1=0,
+    ID_IOOUT_LED2,
+
+    ID_IOOUT_NUM,
+}ioout_id_t;
 
 ```
 
@@ -60,23 +63,21 @@ typedef enum
 初始化 IOOUT 管理结构体。
  
 ```
-void ioout_Config(void)
+void ioout_port_init(void)
 {
-    ioout_ListInit();
+  
+    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED1,gpio_set_led1))
+    {
 
-	/*--------------- 移植配置Start */
-	
-    if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED0,GPIO_SetLed0))
-    {
-		//do something
-    }
-	
-	if(IOOUT_NO_ERR != ioout_Init(ID_IOOUT_LED1,GPIO_SetLed1))
-    {
-		//do something
     }
 
-	/*--------------- 移植配置End */
+    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED2,gpio_set_led2))
+    {
+
+    }
+	
+	
+	
 }
 ```
 
