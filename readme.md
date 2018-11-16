@@ -136,7 +136,7 @@ ioout_set(ID_IOOUT_LED2,200,100,2000);//设置LED1周期300ms，占空比1/3，�
 
 ### 3.4 启动
 启动端口调用，启动成功返回 IOOUT_NO_ERR 。
->ioout_err_t ioout_Start(ioout_id_t ioout_id)
+>ioout_err_t ioout_start(ioout_id_t ioout_id)
 
 | 参数                |描述|
 | :--------           |:--------  |
