@@ -28,6 +28,12 @@ extern "C" {
 /* types ------------------------------------------------------------*/
 
 /**
+  * @brief 定时周期配置
+  */
+#define IOOUT_TIMER_INTERVAL  10
+
+
+/**
   * @brief IO输出控制ID
   */
 typedef enum
@@ -38,6 +44,8 @@ typedef enum
 
     ID_IOOUT_NUM,
 }ioout_id_t;
+
+
 
 /**
   * @brief IO输出控制数量类型定义
