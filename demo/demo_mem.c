@@ -45,6 +45,6 @@ void beep_show_fail(void)
 
 void beep_alarm(void)
 {
-	ioout_set(ioout_beep,250,250,0);
+    ioout_set(ioout_beep,250,250,0);
 }
 
