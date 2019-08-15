@@ -79,10 +79,14 @@ API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/
 >int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t));
 
 
-| 参数                |描述|
-| :--------           |:--------  |
-| handle              | 句柄 | 
-| ioout_cb            | IO口接口函数 | 
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄       | 
+| ioout_cb           | 接口函数   | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
+
 
 示例：
 ```
@@ -97,28 +101,69 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 使用IOOUT_USE_MEM会释放内存。
 >int ioout_kill(ioout_t handle)
 
-| 参数                |描述|
-| :--------           |:--------  |
-| handle             | 句柄 | 
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄       | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
 
 
 ### 3.3 时间参数设置
-设置端口时间并启动，时间参数以 ms 为单位，参数必须是查询 IOOUT_BASE_TIME  时间的整数倍，ctrl_time 为 0 一直保持周期，设置成功返回 0 。
+*设置端口时间并启动*，时间参数以 ms 为单位，参数必须是查询 IOOUT_BASE_TIME  时间的整数倍，ctrl_time 为 0 一直保持周期，设置成功返回 0 。
 
 >int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time);
 
-| 参数                |描述|
-| :--------           |:--------  |
-| handle             | 句柄 | 
-| interval            | 间隔时间 | 
-| work_time            | 持续时间 | 
-| ctrl_time             | 总时间 | 
+| 参数              |描述|
+| :--------         |:--------  |
+| handle            | 句柄      | 
+| interval          | 间隔时间  | 
+| work_time         | 持续时间  | 
+| ctrl_time         | 总时间    | 
+| **返回**          | **描述**  |
+|0                  | 正确执行  |
+|-1                 | 失败      |
 
 示例：
 
 见demo
 
+### 3.4 停止端口输出
+停止端口输出，并将端口参数复位，
 
+>int ioout_stop(ioout_t handle)
+
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄       | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
+
+
+### 3.5 暂停端口输出
+停止端口输出，端口参数不复位，
+
+>int ioout_pause(ioout_t handle)
+
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄       | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
+
+### 3.6 启动端口输出
+停止端口输出，端口参数不复位，
+
+>int ioout_start(ioout_t handle)
+
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄       | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
 
 ## 4. DEMO
 
