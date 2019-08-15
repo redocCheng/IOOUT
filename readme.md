@@ -99,7 +99,7 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 
 | 参数                |描述|
 | :--------           |:--------  |
-| iooutId             | 句柄 | 
+| handle             | 句柄 | 
 
 
 ### 3.3 时间参数设置
