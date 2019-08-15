@@ -1,54 +1,56 @@
-/**
-  * Copyright (c) 2016-2018, redocCheng, <619675912@qq.com>
-  * 
-  * @file       ioout_port.c
-  * @brief      ioout_port文件
-  * @author     redoc
-  * @version    v1.0
-  * @date       2018-11-09
-  *
-  * @note
-
-  *
-  * @remark
-  */
+/*
+ * Copyright (c) 2019, Anke Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2019-08-14     redoc        the first version
+ */
+ 
 #include "ioout.h"
+#include "rtthread.h"
 
-void gpio_set_led1(uint8_t value);
-void gpio_set_led2(uint8_t value);
 
-/**
-  * @brief  配置ioout
-  * @param  void
-  *
-  * @return void
-  * @remark
-  */
-void ioout_port_init(void)
+#ifdef IOOUT_USE_MEM
+
+void *ioout_malloc(uint32_t nbytes)
 {
-  
-    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED1,gpio_set_led1))
-    {
+    return rt_malloc(nbytes);
+}
 
+void ioout_free (void *ptr)
+{
+    rt_free(ptr);
+}
+
+#endif
+
+static void timeout_ioout_cb(void *parameter)
+{
+    ioout_loop();
+}
+
+int ioout_config(void)
+{
+    rt_timer_t timer_ioout = rt_timer_create("timer_ioout", 
+                                             timeout_ioout_cb,
+                                             RT_NULL, 
+                                             IOOUT_BASE_TIME,
+                                             RT_TIMER_FLAG_PERIODIC);
+    
+    if (timer_ioout != RT_NULL)
+    {        
+        rt_timer_start(timer_ioout);
     }
-
-    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED2,gpio_set_led2))
+    else
     {
-
+        return -1;
     }
-	
-	
-	
+    
+    return 0;
 }
+INIT_PREV_EXPORT(ioout_config);
 
 
-static void gpio_set_led1(uint8_t value)
-{
-	//set led1
-}
-
-static void gpio_set_led2(uint8_t value)
-{
-	//set led2
-}
 

@@ -9,160 +9,120 @@
 | 源文件               |描述|
 | :--------           |:--------  |
 | \ioout              | IOOUT操作接口和实现源码 | 
-| \demo               | stm32f10x平台基于HAL库的demo | 
+| \demo               | 使用范例 | 
 
 ## 1.2 资源占用
 
-**单片机资源**： 定时器一个
-
-**ROM**: 1Kb
+**单片机资源**： 定时一个
 
 **RAM**: 视IO口多少
 
 ## 2. 移植
 
 
-### 2.1 定时器调用
-需要用户设置 IOOUT_TIMER_INTERVAL，初始化一个定时器，并且定时器周期和 IOOUT_TIMER_INTERVAL  保持一致
-```
-/**
-  * @brief 定时周期配置
-  */
-#define IOOUT_TIMER_INTERVAL  10
+### 2.1 定时调用
+需要用户设置 IOOUT_BASE_TIME，初始化一个定时器，并且定时周期和 IOOUT_BASE_TIME  保持一致
 
-```
+#define IOOUT_BASE_TIME  10
+
 
 在定时器中断中，调用接口函数
 ```
-ioout_callback_process();	   /**< IO控制口处理函数  */
+ioout_loop();	   
 
 ```
 
-### 2.2 配置控制ID
+### 2.2 配置内存管理
+
+选择是否使用内存管理，并配置内存管理接口函数
+
 ```	
-/**
-  * @brief IO输出控制ID
-  */
-typedef enum
-{
-    ID_IOOUT_LED0 = 0,
-    ID_IOOUT_LED1,
-
-    ID_IOOUT_NUM,
-} iooutId_Typedef;
-```
-
-### 2.3 配置控制数量
+#define IOOUT_USE_MEM
 ```	
-typedef enum
-{
-    IOOUT_MAX = (ID_IOOUT_NUM),
-
-}ioout_index_num_t;
 
 ```
+#ifdef IOOUT_USE_MEM
 
-### 2.4 配置相应ID的回掉函数
-在`ioout_port_init`配置ID的回调函数，具体格式参考 API 章节，
-
-```
-void ioout_port_init(void)
+void *ioout_malloc(uint32_t nbytes)
 {
-  
-    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED1,gpio_set_led1))
-    {
-
-    }
-
-    if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED2,gpio_set_led2))
-    {
-
-    }	
+    //add malloc
 }
+
+void ioout_free (void *ptr)
+{
+    //add free
+}
+
+#endif
 ```
 
+
+### 2.3 配置优先输出的电平
+
+默认优先输出work_time,定义后即可先输出interval
+
+```	
+#define IOOUT_LOW_PULSE_PRIORITY    
+
+```
 
 
 ## 3. API
 API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/ioout/ioout.h) 声明，下方内容可以使用 CTRL+F 搜索。
 
-### 3.1 核心结构体配置
-初始化的 IOOUT 的核心结构体，初始化后才可以使用下面的API。
-> void ioout_config(void)
 
-### 3.2 端口函数初始化
-查找空闲端口，并初始化该端口，初始化成返回 *IOOUT_NO_ERR* ，其中，IO口接口函数需要遵循 *void function(uint8_t)* 格式。
->ioout_err_t ioout_init(ioout_id_t ioout_id,IOOUTCALLBACK timproc)
+
+### 3.1 端口函数初始化
+查找空闲端口，并初始化该端口，初始化成返回 0 ，其中，IO口接口函数需要遵循 *void function(uint8_t)* 格式。
+
+使用IOOUT_USE_MEM会申请内存，只需创建一个句柄指针即可，反之，需要创建句柄实体。
+>int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t));
 
 
 | 参数                |描述|
 | :--------           |:--------  |
-| iooutId             | 输出口ID | 
-| timproc             | IO口接口函数 | 
+| handle              | 句柄 | 
+| ioout_cb            | IO口接口函数 | 
 
 示例：
 ```
-if(IOOUT_NO_ERR != ioout_init(ID_IOOUT_LED0,GPIO_SetLed0))
+if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 {
-	//do something
+
 }
 ```
 
-### 3.3 时间参数设置
-设置端口时间并启动，时间参数以 ms 为单位，参数必须是查询 interval  时间的整数倍，workTime 为 0 停止，ctlTime 为 0 一直保持周期，设置成功返回 IOOUT_NO_ERR 。
-
->ioout_err_t ioout_set(ioout_id_t ioout_id,uint32_t interval,uint32_t workTime,uint32_t ctlTime)
+### 3.2 删除
+将端口删除，删除成功返回 0 。
+使用IOOUT_USE_MEM会释放内存。
+>int ioout_kill(ioout_t handle)
 
 | 参数                |描述|
 | :--------           |:--------  |
-| iooutId             | 输出口ID | 
+| iooutId             | 句柄 | 
+
+
+### 3.3 时间参数设置
+设置端口时间并启动，时间参数以 ms 为单位，参数必须是查询 IOOUT_BASE_TIME  时间的整数倍，ctrl_time 为 0 一直保持周期，设置成功返回 0 。
+
+>int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time);
+
+| 参数                |描述|
+| :--------           |:--------  |
+| handle             | 句柄 | 
 | interval            | 间隔时间 | 
-| workTime            | 持续时间 | 
-| ctlTime             | 总时间 | 
+| work_time            | 持续时间 | 
+| ctrl_time             | 总时间 | 
 
 示例：
 
-```
-ioout_set(ID_IOOUT_LED1,1000,1000,0);//设置LED0保持周期2s,占空比50%
-ioout_set(ID_IOOUT_LED2,200,100,2000);//设置LED1周期300ms，占空比1/3，总时间2s
-```
->注：ioout_Time_Interval  = 10
+见demo
 
-### 3.4 启动
-启动端口调用，启动成功返回 IOOUT_NO_ERR 。
->ioout_err_t ioout_start(ioout_id_t ioout_id)
 
-| 参数                |描述|
-| :--------           |:--------  |
-| iooutId             | 输出口ID | 
-
-### 3.5 暂停
-暂停端口调用，暂停端口 **不清除端口时间数据** ，暂停返回 IOOUT_NO_ERR 。
->ioout_err_t ioout_pause(ioout_id_t ioout_id)
-
-| 参数                |描述|
-| :--------           |:--------  |
-| iooutId             | 输出口ID | 
-
-### 3.6 停止
-停止端口调用，暂停端口将 **清除端口时间数据** ，暂停返回 IOOUT_NO_ERR 。
->ioout_err_t ioout_stop(ioout_id_t ioout_id)
-
-| 参数                |描述|
-| :--------           |:--------  |
-| iooutId             | 输出口ID | 
-
-### 3.7 删除
-将端口从结构体中删除，如果未再次初始化，将无法正常调用，删除成功返回 IOOUT_NO_ERR 。
->ioout_err_t ioout_kill(ioout_id_t ioout_id)
-
-| 参数                |描述|
-| :--------           |:--------  |
-| iooutId             | 输出口ID | 
 
 ## 4. DEMO
 
-[DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 使用芯片为 STM32F103RCT6，使用 HAL 库，通过延时方式测试参数是否设置成功。
+[DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 。
 
 ## 5. 其它
 If you have any question,Please contact  redoc/619675912@qq.com
