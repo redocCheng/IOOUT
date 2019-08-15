@@ -24,7 +24,7 @@ int beep_init(void)
     return 0;
 }
 
-static void gpio_set_beep(&uint8_t value)
+static void gpio_set_beep(uint8_t value)
 {
     //set_beep
 }
@@ -46,7 +46,7 @@ void beep_show_fail(void)
 
 void beep_alarm(void)
 {
-	ioout_set(&ioout_beep,250,250,0);
+    ioout_set(&ioout_beep,250,250,0);
 }
 
 
