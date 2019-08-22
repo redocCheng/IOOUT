@@ -69,7 +69,7 @@ int ioout_kill(ioout_t handle);
 int ioout_start(ioout_t handle);
 int ioout_stop(ioout_t handle);
 int ioout_pause(ioout_t handle);
-int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time);
+int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time, uint8_t interval_first);
 void ioout_loop(void);
 
 #ifdef __cplusplus

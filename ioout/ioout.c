@@ -6,6 +6,7 @@
  * Change Logs:
  * Date           Author       Notes
  * 2019-08-14     redoc        the first version
+ * 2019-08-22     redoc        add interval first change
  */
 
 #include "ioout.h"
@@ -119,7 +120,7 @@ int ioout_pause(ioout_t handle)
     return 0;
 }
 
-int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time)
+int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time, uint8_t interval_first)
 {
     if(NULL == handle)
     {
@@ -163,13 +164,16 @@ int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ct
     handle->sum_count = 0;
     handle->enable = true;
     
-#ifdef IOOUT_LOW_PULSE_PRIORITY
-    handle->ioout_cb(false);
-    handle->io_state = false;
-#else
-    handle->ioout_cb(true);
-    handle->io_state = true;
-#endif    
+    if(interval_first)
+    {
+        handle->ioout_cb(false);
+        handle->io_state = false;
+    }
+    else
+    {
+        handle->ioout_cb(true);
+        handle->io_state = true;
+    }  
     
     return 0;
 }

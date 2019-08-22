@@ -35,16 +35,16 @@ void beep_stop(void)
 
 void beep_show_succ(void)
 {
-    ioout_set(ioout_beep,0,100,800);
+    ioout_set(ioout_beep,0,100,800,false);
 }
 
 void beep_show_fail(void)
 {
-    ioout_set(ioout_beep,250,250,1500);
+    ioout_set(ioout_beep,250,250,1500,false);
 }
 
 void beep_alarm(void)
 {
-    ioout_set(ioout_beep,250,250,0);
+    ioout_set(ioout_beep,250,250,0,false);
 }
 
