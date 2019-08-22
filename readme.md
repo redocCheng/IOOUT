@@ -112,7 +112,7 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 ### 3.3 时间参数设置
 *设置端口时间并启动*，时间参数以 ms 为单位，参数必须是查询 IOOUT_BASE_TIME  时间的整数倍，ctrl_time 为 0 一直保持周期，设置成功返回 0 。
 
->int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time);
+>int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time , uint8_t interval_first);
 
 | 参数              |描述|
 | :--------         |:--------  |
@@ -120,6 +120,7 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 | interval          | 间隔时间  | 
 | work_time         | 持续时间  | 
 | ctrl_time         | 总时间    | 
+| interval_first    | 先输出间隔|
 | **返回**          | **描述**  |
 |0                  | 正确执行  |
 |-1                 | 失败      |
