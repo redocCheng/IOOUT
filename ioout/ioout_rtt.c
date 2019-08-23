@@ -70,11 +70,7 @@ static rt_size_t rt_ioout_write(rt_device_t dev, rt_off_t pos, const void *buffe
     ioout_device = (struct rt_ioout_device *)dev->user_data;
     ioout_setvalue = (struct ioout_setvalue_struct *)buffer;
 
-    result = ioout_set( ioout_device->ioout, 
-                        ioout_setvalue->interval, 
-                        ioout_setvalue->work_time, 
-                        ioout_setvalue->ctrl_time, 
-                        ioout_setvalue->interval_first);
+    result = ioout_set( ioout_device->ioout, ioout_setvalue);
                                 
     LOG_D(  "%s write data :%d %d %d %d", 
             dev->parent.name, 
@@ -116,11 +112,7 @@ static rt_err_t rt_ioout_ctrl(rt_device_t dev, int cmd, void *args)
             struct ioout_setvalue_struct *ioout_setvalue;
             ioout_setvalue = (struct ioout_setvalue_struct *)args;
             
-            result = ioout_set( ioout_device->ioout, 
-                                ioout_setvalue->interval, 
-                                ioout_setvalue->work_time, 
-                                ioout_setvalue->ctrl_time, 
-                                ioout_setvalue->interval_first);
+            result = ioout_set( ioout_device->ioout, ioout_setvalue);
         }
         break;
     default:

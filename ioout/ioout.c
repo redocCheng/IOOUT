@@ -139,7 +139,7 @@ int ioout_pause(ioout_t handle)
     return 0;
 }
 
-int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time, uint8_t interval_first)
+int ioout_set(ioout_t handle, ioout_setvalue_t setvalue)
 {
     if(NULL == handle)
     {
@@ -148,32 +148,32 @@ int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ct
     
     uint32_t base_time = IOOUT_BASE_TIME;
 
-    if(((interval % base_time ) != 0 )
-    || ((work_time % base_time ) != 0 )
-    || ((ctrl_time % base_time ) != 0 ))
+    if(((setvalue->interval % base_time ) != 0 )
+    || ((setvalue->work_time % base_time ) != 0 )
+    || ((setvalue->ctrl_time % base_time ) != 0 ))
     {
         return -1;
     }
     
-    if(0 == work_time)
+    if(0 == setvalue->work_time)
     {
         return -1;
     }
     
-    if(interval != 0)
+    if(setvalue->interval != 0)
     {
-       handle->interval = interval/base_time; 
+       handle->interval = setvalue->interval/base_time; 
     }
     else
     {
         handle->interval = 0;
     }
     
-    handle->work_time = work_time/base_time; 
+    handle->work_time = setvalue->work_time/base_time; 
 
-    if(ctrl_time != 0)
+    if(setvalue->ctrl_time != 0)
     {
-       handle->ctrl_time = ctrl_time/base_time; 
+       handle->ctrl_time = setvalue->ctrl_time/base_time; 
     }
     else
     {
@@ -183,7 +183,7 @@ int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ct
     handle->sum_count = 0;
     handle->enable = true;
     
-    if(interval_first)
+    if(setvalue->interval_first)
     {
         handle->ioout_cb(false);
         handle->io_state = false;

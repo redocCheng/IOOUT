@@ -46,6 +46,15 @@ struct ioout_struct
 
 typedef struct ioout_struct *ioout_t;
 
+struct ioout_setvalue_struct
+{
+	uint16_t interval;
+	uint16_t work_time;
+	uint16_t ctrl_time;
+	uint8_t  interval_first;
+};
+
+typedef struct ioout_setvalue_struct *ioout_setvalue_t;
 
 /* constants --------------------------------------------------------*/
 /* variables --------------------------------------------------------*/
@@ -71,7 +80,7 @@ int ioout_kill(ioout_t handle);
 int ioout_start(ioout_t handle);
 int ioout_stop(ioout_t handle);
 int ioout_pause(ioout_t handle);
-int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time, uint8_t interval_first);
+int ioout_set(ioout_t handle, ioout_setvalue_t value);
 void ioout_loop(void);
 
 #ifdef __cplusplus
