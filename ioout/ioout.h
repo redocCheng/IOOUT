@@ -32,8 +32,8 @@ extern "C" {
 /* types ------------------------------------------------------------*/
 struct ioout_struct
 {
-    uint16_t interval;          /**<  间隔时间（占空比低）     */
-    uint16_t work_time;         /**<  持续时间（占空比高）     */
+    uint16_t interval;          /**<  间隔时间                 */
+    uint16_t work_time;         /**<  持续时间                 */
     uint16_t ctrl_time;         /**<  总时间                   */
     uint16_t cur_count;         /**<  单周期计数               */
     uint16_t sum_count;         /**<  总时间计数               */
@@ -48,10 +48,10 @@ typedef struct ioout_struct *ioout_t;
 
 struct ioout_setvalue_struct
 {
-	uint16_t interval;
-	uint16_t work_time;
-	uint16_t ctrl_time;
-	uint8_t  interval_first;
+	uint16_t interval;          /**<  间隔时间                 */
+    uint16_t work_time;         /**<  持续时间                 */
+    uint16_t ctrl_time;         /**<  总时间                   */
+	uint8_t  interval_first;	/**<  优先输出interval         */
 };
 
 typedef struct ioout_setvalue_struct *ioout_setvalue_t;

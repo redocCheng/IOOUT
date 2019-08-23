@@ -2,7 +2,7 @@
 [![Badge](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu/#/zh_CN)
 
 ## 1.介绍
-[IOOUT](https://github.com/redocCheng/IOOUT)  是一个 GPIO 输出口控制扩展模块，提供 **启动** 、 **暂停** 、**设置** 和 **停止** 接口，可以根据你所需的周期、占空比和总时间，更加便捷地管理多个IO口时序。
+[IOOUT](https://github.com/redocCheng/IOOUT)  是一个 GPIO 输出口控制扩展模块，提供 **启动** 、 **暂停** 、**设置** 和 **停止** 接口，可以根据你所需的周期、占空比和总时间，更加便捷地管理多个IO口时序，支持内存管理的选用。
 
 ## 1.1 文件结构
 
@@ -37,8 +37,11 @@ ioout_loop();
 选择是否使用内存管理，并配置内存管理接口函数
 
 ```	
+
 #define IOOUT_USE_MEM
+
 ```	
+
 
 ```
 #ifdef IOOUT_USE_MEM
@@ -57,17 +60,24 @@ void ioout_free (void *ptr)
 ```
 
 
+### 2.2 配置RTT驱动
+
+选择是否使用RTT驱动，*配置RTT驱动必须打开IOOUT_USE_MEM*
+
+```	
+#define IOOUT_USE_RT_DEVICE
+```	
+
 
 
 ## 3. API
 API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/ioout/ioout.h) 声明，下方内容可以使用 CTRL+F 搜索。
 
 
-
 ### 3.1 端口函数初始化
 查找空闲端口，并初始化该端口，初始化成返回 0 ，其中，IO口接口函数需要遵循 *void function(uint8_t)* 格式。
 
-使用IOOUT_USE_MEM会申请内存，只需创建一个句柄指针即可，反之，需要创建句柄实体。
+
 >int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t));
 
 
@@ -79,18 +89,21 @@ API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/
 | 0                  | 正确执行   |
 | -1                 | 失败       |
 
+使用IOOUT_USE_MEM会申请内存，只需创建一个句柄指针即可，反之，需要创建句柄实体。
 
-示例：
-```
-if(-1 == ioout_init(ioout_beep,gpio_set_beep))
-{
+>int ioout_init(ioout_t *handle, void(*ioout_cb)(uint8_t));
 
-}
-```
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle            | 句柄的地址       | 
+| ioout_cb           | 接口函数   | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
+
 
 ### 3.2 删除
 将端口删除，删除成功返回 0 。
-使用IOOUT_USE_MEM会释放内存。
 >int ioout_kill(ioout_t handle)
 
 | 参数               | 描述       |
@@ -100,19 +113,29 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 | 0                  | 正确执行   |
 | -1                 | 失败       |
 
+使用IOOUT_USE_MEM会释放内存。
+
+>int ioout_kill(ioout_t *handle)
+
+| 参数               | 描述       |
+| :--------          |:--------   |
+| handle             | 句柄的地址       | 
+| **返回**           | **描述**   |
+| 0                  | 正确执行   |
+| -1                 | 失败       |
 
 ### 3.3 时间参数设置
 *设置端口时间并启动*，时间参数以 ms 为单位，参数必须是查询 IOOUT_BASE_TIME  时间的整数倍，ctrl_time 为 0 一直保持周期，设置成功返回 0 。
 
->int ioout_set(ioout_t handle, uint32_t interval, uint32_t work_time, uint32_t ctrl_time , uint8_t interval_first);
+>int ioout_set(ioout_t handle, ioout_setvalue_t setvalue);
 
 | 参数              |描述|
 | :--------         |:--------  |
 | handle            | 句柄      | 
-| interval          | 间隔时间  | 
-| work_time         | 持续时间  | 
-| ctrl_time         | 总时间    | 
-| interval_first    | 先输出间隔|
+| setvalue->interval          | 间隔时间  | 
+| setvalue->work_time         | 持续时间  | 
+| setvalue->ctrl_time         | 总时间    | 
+| setvalue->interval_first    | 先输出间隔|
 | **返回**          | **描述**  |
 |0                  | 正确执行  |
 |-1                 | 失败      |
@@ -151,16 +174,36 @@ if(-1 == ioout_init(ioout_beep,gpio_set_beep))
 
 >int ioout_start(ioout_t handle)
 
+| 参数                | 描述       |
+| :--------          |:--------  |
+| handle             | 句柄       | 
+| **返回**            | **描述**  |
+| 0                  | 正确执行   |
+| -1                 | 失败      |
+
+
+## 4. IOOUT的RTT设备驱动
+
+###4.1 端口注册
+
+使用端口注册函数可以将端口注册到RTT的设备列表，然后使用rt_devcie的通用函数调用该设备。使用ioout_rtt驱动需要打开IOOUT_USE_MEM和IOOUT_USE_RT_DEVICE两个定义。
+
+>rt_err_t rt_hw_ioout_device_init(const char *device_name, void(*ioout_cb)(uint8_t))
+
 | 参数               | 描述       |
 | :--------          |:--------   |
-| handle             | 句柄       | 
-| **返回**           | **描述**   |
-| 0                  | 正确执行   |
-| -1                 | 失败       |
+| device_name        | 设备名称       | 
+| ioout_cb          | 需要调用的函数   |
+| **返回**           | **描述**       |
+| RT_EOK            | 正确执行      |
+| 负数               | 失败       |
 
-## 4. DEMO
+
+## 5. DEMO
+
 
 [DEMO](https://github.com/redocCheng/IOOUT/tree/master/demo) 。
 
-## 5. 其它
+
+## 6. 其它
 If you have any question,Please contact  redoc/619675912@qq.com
