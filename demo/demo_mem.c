@@ -10,6 +10,10 @@
 
 #include "ioout.h"
 
+#define VALUE_BEEP_SHOW_SUCC   {0,100,800,false}
+#define VALUE_BEEP_SHOW_FAIL   {250,250,1500,false}
+#define VALUE_BEEP_SHOW_ALARM  {250,250,0,false}
+
 static ioout_t ioout_beep = NULL;
 static void gpio_set_beep(uint8_t value);
 
@@ -28,23 +32,26 @@ static void gpio_set_beep(uint8_t value)
     //set_beep
 }
 
-void beep_stop(void)
+int beep_stop(void)
 {
-    ioout_stop(ioout_beep);
+    return ioout_stop(ioout_beep);
 }
 
-void beep_show_succ(void)
+int beep_show_succ(void)
 {
-    ioout_set(ioout_beep,0,100,800,false);
+	struct ioout_setvalue_struct show_succ = VALUE_BEEP_SHOW_SUCC;
+    return ioout_set(ioout_beep, &show_succ);
 }
 
-void beep_show_fail(void)
+int beep_show_fail(void)
 {
-    ioout_set(ioout_beep,250,250,1500,false);
+	struct ioout_setvalue_struct show_fail = VALUE_BEEP_SHOW_FAIL;
+    return ioout_set(ioout_beep, &show_fail);
 }
 
-void beep_alarm(void)
+int beep_alarm(void)
 {
-    ioout_set(ioout_beep,250,250,0,false);
+	struct ioout_setvalue_struct show_alarm = VALUE_BEEP_SHOW_ALARM;
+    return ioout_set(ioout_beep, &show_alarm);
 }
 
