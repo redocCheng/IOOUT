@@ -39,19 +39,19 @@ int beep_stop(void)
 
 int beep_show_succ(void)
 {
-	struct ioout_setvalue_struct show_succ = VALUE_BEEP_SHOW_SUCC;
+    struct ioout_setvalue_struct show_succ = VALUE_BEEP_SHOW_SUCC;
     return ioout_set(ioout_beep, &show_succ);
 }
 
 int beep_show_fail(void)
 {
-	struct ioout_setvalue_struct show_fail = VALUE_BEEP_SHOW_FAIL;
+    struct ioout_setvalue_struct show_fail = VALUE_BEEP_SHOW_FAIL;
     return ioout_set(ioout_beep, &show_fail);
 }
 
 int beep_alarm(void)
 {
-	struct ioout_setvalue_struct show_alarm = VALUE_BEEP_SHOW_ALARM;
+    struct ioout_setvalue_struct show_alarm = VALUE_BEEP_SHOW_ALARM;
     return ioout_set(ioout_beep, &show_alarm);
 }
 
