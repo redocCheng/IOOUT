@@ -14,7 +14,6 @@
 
 #define PIN_BEEP 	GET_PIN(E,1)
 
-static ioout_t ioout_beep = NULL;
 static void gpio_set_beep(uint8_t value);
 rt_device_t beep;
 
@@ -44,7 +43,6 @@ static void gpio_set_beep(uint8_t value)
 
 int beep_stop(void)
 {
-    ioout_stop(ioout_beep);
     return rt_device_control(beep, RT_IOOUT_CTRL_STOP, RT_NULL);
 }
 

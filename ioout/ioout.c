@@ -13,14 +13,22 @@
 
 static ioout_t head_handle = NULL;
 
+#ifdef IOOUT_USE_MEM
+int ioout_init(ioout_t *handle, void(*ioout_cb)(uint8_t))
+#else
 int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t))
+#endif
 {
     ioout_t target = head_handle;
+    ioout_t handle_malloc = NULL;
     
     if(NULL != ioout_cb)   
     {
 #ifdef IOOUT_USE_MEM
-       handle = ioout_malloc(sizeof(struct ioout_struct)); 
+       handle_malloc = ioout_malloc(sizeof(struct ioout_struct)); 
+       *handle = handle_malloc;
+#else
+       handle_malloc =  handle;
 #endif
     }
     else
@@ -28,28 +36,28 @@ int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t))
         return -1;
     }
     
-    memset(handle,0,sizeof(struct ioout_struct));
+    memset(handle_malloc,0,sizeof(struct ioout_struct));
     
-    handle->ioout_cb = ioout_cb;
-    handle->ioout_cb(false);  
+    handle_malloc->ioout_cb = ioout_cb;
+    handle_malloc->ioout_cb(false);  
     
     while(target) 
     {
-        if(target == handle) 
+        if(target == handle_malloc) 
         {
             return -1;    
         }
         target = target->next;
     }
     
-    handle->next = head_handle;
-    head_handle = handle;
+    handle_malloc->next = head_handle;
+    head_handle = handle_malloc;
     
     return 0;
 }
 
-int ioout_kill(ioout_t handle)
-{
+int ioout_kill(ioout_t* handle)
+ {
     if(NULL == handle)
     {
         return -1;
@@ -60,7 +68,7 @@ int ioout_kill(ioout_t handle)
     for(curr = &head_handle; *curr; ) 
     {
         ioout_t entry = *curr;
-        if (entry == handle) 
+        if (entry == *handle) 
         {
             *curr = entry->next;
         } 
@@ -71,7 +79,8 @@ int ioout_kill(ioout_t handle)
     }
     
 #ifdef IOOUT_USE_MEM
-    ioout_free(handle); 
+    ioout_free(*handle); 
+    *handle = NULL;
 #endif
     
     return 0;

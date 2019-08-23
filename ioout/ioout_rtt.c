@@ -15,6 +15,7 @@
 #include <drv_log.h>
 
 #ifdef IOOUT_USE_RT_DEVICE
+
 struct rt_ioout_device
 {
     struct rt_device parent;

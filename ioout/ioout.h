@@ -1,16 +1,12 @@
-/**
-  * @file       ioout.h
-  * @brief      IO输出控制头文件
-  * @author     redoc
-  * @version    v1.0
-  * @date       2016-08-09
-  *
-  * @note
-  * [2016-08-09] <redoc> v1.0
-  * 初始版本
-  * @remark
-  */
-
+/*
+ * Copyright (c) 2019, Anke Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2019-08-14     redoc        the first version
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
@@ -30,8 +26,15 @@ extern "C" {
 #endif
     
 #if !defined(IOOUT_BASE_TIME)
-#error "Please configure basic time (in ioout_cfg.h)"
+    #error "Please configure basic time (in ioout_cfg.h)"
 #endif
+    
+#if defined(IOOUT_USE_RT_DEVICE)   
+#if !defined(IOOUT_USE_MEM)   
+    #error "IOOUT_USE_RT_DEVICE need IOOUT_USE_MEM define (in ioout_cfg.h)"    
+    #undef IOOUT_USE_RT_DEVICE 
+#endif
+#endif    
 
 /* types ------------------------------------------------------------*/
 struct ioout_struct
@@ -64,8 +67,12 @@ void ioout_free (void *ptr);
 #endif
 
 // ioout.c
+#ifdef IOOUT_USE_MEM
+int ioout_init(ioout_t *handle, void(*ioout_cb)(uint8_t));
+#else
 int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t));
-int ioout_kill(ioout_t handle);
+#endif
+int ioout_kill(ioout_t *handle);
 int ioout_start(ioout_t handle);
 int ioout_stop(ioout_t handle);
 int ioout_pause(ioout_t handle);

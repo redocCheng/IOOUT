@@ -15,7 +15,7 @@ static void gpio_set_beep(uint8_t value);
 
 int beep_init(void)
 {
-    if(-1 == ioout_init(ioout_beep,gpio_set_beep))
+    if(-1 == ioout_init(&ioout_beep,gpio_set_beep))
     {
 
     }
