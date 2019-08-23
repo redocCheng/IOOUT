@@ -24,109 +24,109 @@ struct rt_ioout_device
 
 static rt_err_t rt_ioout_open(rt_device_t dev, rt_uint16_t oflag)
 {
-	rt_err_t result = RT_EOK;
+    rt_err_t result = RT_EOK;
     struct rt_ioout_device *ioout_device;
-	
-	RT_ASSERT(dev != RT_NULL);
-	RT_ASSERT(dev->user_data != RT_NULL);
-	
-	ioout_device = (struct rt_ioout_device *)dev->user_data;
-	
-	result = ioout_init(&ioout_device->ioout,ioout_device->ioout_cb);
-    
+
+    RT_ASSERT(dev != RT_NULL);
+    RT_ASSERT(dev->user_data != RT_NULL);
+
+    ioout_device = (struct rt_ioout_device *)dev->user_data;
+
+    result = ioout_init(&ioout_device->ioout,ioout_device->ioout_cb);
+
     LOG_D("%s init", dev->parent.name);
-	
-	return result;
+
+    return result;
 }
 
 static rt_err_t rt_ioout_close(rt_device_t dev)
 {
-	rt_err_t result = RT_EOK;
+    rt_err_t result = RT_EOK;
     struct rt_ioout_device *ioout_device;
-	
-	RT_ASSERT(dev != RT_NULL);
+
+    RT_ASSERT(dev != RT_NULL);
     RT_ASSERT(dev->user_data != RT_NULL);
-	
-	ioout_device = (struct rt_ioout_device *)dev->user_data;
-	
-	result = ioout_kill(&ioout_device->ioout);
-    
+
+    ioout_device = (struct rt_ioout_device *)dev->user_data;
+
+    result = ioout_kill(&ioout_device->ioout);
+
     LOG_D("%s close", dev->parent.name);
-	
-	return result;
+
+    return result;
 }
 
 static rt_size_t rt_ioout_write(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
 {
-	rt_err_t result = RT_EOK;
+    rt_err_t result = RT_EOK;
     struct rt_ioout_device *ioout_device;
-	struct ioout_setvalue_struct *ioout_setvalue;
-	
-	RT_ASSERT(dev != RT_NULL);
-	RT_ASSERT(buffer != RT_NULL);
+    struct ioout_setvalue_struct *ioout_setvalue;
+
+    RT_ASSERT(dev != RT_NULL);
+    RT_ASSERT(buffer != RT_NULL);
     RT_ASSERT(dev->user_data != RT_NULL);
-	
-	ioout_device = (struct rt_ioout_device *)dev->user_data;
-	ioout_setvalue = (struct ioout_setvalue_struct *)buffer;
-	
-	result = ioout_set( ioout_device->ioout, 
+
+    ioout_device = (struct rt_ioout_device *)dev->user_data;
+    ioout_setvalue = (struct ioout_setvalue_struct *)buffer;
+
+    result = ioout_set( ioout_device->ioout, 
                         ioout_setvalue->interval, 
                         ioout_setvalue->work_time, 
                         ioout_setvalue->ctrl_time, 
                         ioout_setvalue->interval_first);
-								
+                                
     LOG_D(  "%s write data :%d %d %d %d", 
             dev->parent.name, 
             ioout_setvalue->interval, 
             ioout_setvalue->work_time, 
             ioout_setvalue->ctrl_time, 
             ioout_setvalue->interval_first);
-    
-	return result;
+
+    return result;
 }
 
 static rt_err_t rt_ioout_ctrl(rt_device_t dev, int cmd, void *args)
 {
-	rt_err_t result = RT_EOK;
+    rt_err_t result = RT_EOK;
     struct rt_ioout_device *ioout_device;
-	
-	RT_ASSERT(dev != RT_NULL);
+
+    RT_ASSERT(dev != RT_NULL);
     RT_ASSERT(dev->user_data != RT_NULL);
-	
-	ioout_device = (struct rt_ioout_device *)dev->user_data;
-	
-	switch (cmd)
+
+    ioout_device = (struct rt_ioout_device *)dev->user_data;
+
+    switch (cmd)
     {
-	case RT_IOOUT_CTRL_START  :
-		result = ioout_start(ioout_device->ioout);
-		break;
-		
-	case RT_IOOUT_CTRL_STOP   :
-		result = ioout_stop(ioout_device->ioout);
-		break;
-		
-	case RT_IOOUT_CTRL_PAUSE  :
-		result = ioout_pause(ioout_device->ioout);
-		break;
-		
-	case RT_IOOUT_CTRL_SET    :
-		if (args)
-		{
-			struct ioout_setvalue_struct *ioout_setvalue;
-			ioout_setvalue = (struct ioout_setvalue_struct *)args;
+    case RT_IOOUT_CTRL_START  :
+        result = ioout_start(ioout_device->ioout);
+        break;
+        
+    case RT_IOOUT_CTRL_STOP   :
+        result = ioout_stop(ioout_device->ioout);
+        break;
+        
+    case RT_IOOUT_CTRL_PAUSE  :
+        result = ioout_pause(ioout_device->ioout);
+        break;
+        
+    case RT_IOOUT_CTRL_SET    :
+        if (args)
+        {
+            struct ioout_setvalue_struct *ioout_setvalue;
+            ioout_setvalue = (struct ioout_setvalue_struct *)args;
             
-			result = ioout_set( ioout_device->ioout, 
-								ioout_setvalue->interval, 
-								ioout_setvalue->work_time, 
-								ioout_setvalue->ctrl_time, 
-								ioout_setvalue->interval_first);
-		}
-		break;
-	default:
-		break;
-	}
-	
-	return result;
+            result = ioout_set( ioout_device->ioout, 
+                                ioout_setvalue->interval, 
+                                ioout_setvalue->work_time, 
+                                ioout_setvalue->ctrl_time, 
+                                ioout_setvalue->interval_first);
+        }
+        break;
+    default:
+        break;
+    }
+
+    return result;
 }
 
 #ifdef RT_USING_DEVICE_OPS
@@ -177,16 +177,16 @@ rt_err_t rt_hw_ioout_device_init(const char *device_name, void(*ioout_cb)(uint8_
 {
     rt_err_t result = RT_EOK;
     struct rt_ioout_device *ioout_device;
-    
+
     ioout_device = (struct rt_ioout_device *)rt_malloc(sizeof(struct rt_ioout_device));
     RT_ASSERT(ioout_device != RT_NULL);
     RT_ASSERT(ioout_cb != RT_NULL);
-    
+
     ioout_device->ioout_cb = ioout_cb;
     ioout_device->ioout = RT_NULL;
-    
+
     result = rt_hw_ioout_register(ioout_device, device_name, RT_NULL, ioout_device);
-    
+
     if (result != RT_EOK)
     {
         LOG_E("%s register faild, %d\n", device_name, result);
@@ -195,7 +195,7 @@ rt_err_t rt_hw_ioout_device_init(const char *device_name, void(*ioout_cb)(uint8_
     RT_ASSERT(result == RT_EOK);
 
     LOG_D("%s register done", device_name);
-    
+
     return result;
 }
 
