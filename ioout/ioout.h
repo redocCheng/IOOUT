@@ -29,13 +29,6 @@ extern "C" {
     #error "Please configure basic time (in ioout_cfg.h)"
 #endif
     
-#if defined(IOOUT_USE_RT_DEVICE)   
-#if !defined(IOOUT_USE_MEM)   
-    #error "IOOUT_USE_RT_DEVICE need IOOUT_USE_MEM define (in ioout_cfg.h)"    
-    #undef IOOUT_USE_RT_DEVICE 
-#endif
-#endif    
-
 /* types ------------------------------------------------------------*/
 struct ioout_struct
 {
@@ -69,10 +62,12 @@ void ioout_free (void *ptr);
 // ioout.c
 #ifdef IOOUT_USE_MEM
 int ioout_init(ioout_t *handle, void(*ioout_cb)(uint8_t));
+int ioout_kill(ioout_t *handle);
 #else
 int ioout_init(ioout_t handle, void(*ioout_cb)(uint8_t));
+int ioout_kill(ioout_t handle);
 #endif
-int ioout_kill(ioout_t *handle);
+
 int ioout_start(ioout_t handle);
 int ioout_stop(ioout_t handle);
 int ioout_pause(ioout_t handle);
