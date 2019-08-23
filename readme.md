@@ -184,7 +184,7 @@ API接口在 [*/ioout/ioout.h*](https://github.com/redocCheng/IOOUT/tree/master/
 
 ## 4. IOOUT的RTT设备驱动
 
-###4.1 端口注册
+### 4.1 端口注册
 
 使用端口注册函数可以将端口注册到RTT的设备列表，然后使用rt_devcie的通用函数调用该设备。使用ioout_rtt驱动需要打开IOOUT_USE_MEM和IOOUT_USE_RT_DEVICE两个定义。
 
