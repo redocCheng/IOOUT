@@ -15,6 +15,8 @@
 #define IOOUT_BASE_TIME              10      
 /*  use malloc & free    */
 #define IOOUT_USE_MEM
+/* use rt device */
+#define IOOUT_USE_RT_DEVICE
 
 #endif
 
